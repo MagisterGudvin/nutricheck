@@ -92,6 +92,7 @@ const Auth = (() => {
   async function deleteStudent(id) {
     const users = getUsers().filter(u => u.id !== id);
     await Storage.saveUsers(users);
+    await Database.deleteAllReports(id);
   }
 
   return { register, login, logout, getSession, isTeacher, isStudent, getAllStudents, getStudentById, deleteStudent };

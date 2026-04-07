@@ -130,7 +130,6 @@ const UI = (() => {
         <a href="#diary" data-page="diary"><span class="nav-icon">&#9997;</span> Ввод рациона</a>
         <a href="#report" data-page="report"><span class="nav-icon">&#128202;</span> Последний отчёт</a>
         <a href="#week" data-page="week"><span class="nav-icon">&#128197;</span> Сводка за неделю</a>
-        <a href="#settings" data-page="settings"><span class="nav-icon">&#9881;</span> Настройки</a>
       `;
     } else if (Auth.isTeacher()) {
       nav.innerHTML = `
@@ -206,7 +205,7 @@ const UI = (() => {
         </div>
       </div>
       <div style="margin-top:1.5rem; text-align:center;">
-        <button class="btn btn-primary" id="btn-analyze" style="padding:0.8rem 2.5rem; font-size:1rem;">
+        <button class="btn btn-primary btn-analyze" id="btn-analyze">
           &#128269; Анализировать
         </button>
       </div>
@@ -700,7 +699,7 @@ const UI = (() => {
     $$('.btn-del-student', container).forEach(btn => {
       btn.onclick = async (e) => {
         e.stopPropagation();
-        if (confirm(`Удалить студента "${btn.dataset.name}"? Все его отчёты останутся в базе.`)) {
+        if (confirm(`Удалить студента "${btn.dataset.name}" и все его отчёты?`)) {
           showLoading('Удаляем...');
           await Auth.deleteStudent(btn.dataset.id);
           hideLoading();
@@ -733,7 +732,7 @@ const UI = (() => {
         <p>${escHtml(student.login)} &middot; Отчётов: ${reports.length}</p>
       </div>
 
-      <div style="margin-bottom:1rem;">
+      <div class="action-buttons" style="margin-bottom:1rem;">
         <button class="btn btn-secondary" onclick="location.hash='#students'">&#8592; К списку</button>
         <button class="btn btn-outline btn-csv-one" data-id="${studentId}" data-name="${escHtml(student.name)}">Скачать CSV</button>
       </div>
@@ -748,7 +747,10 @@ const UI = (() => {
             const comment = Database.getComment(studentId, report.date);
             return `
               <div class="day-card" data-date="${report.date}" data-student="${studentId}">
-                <div class="day-date">${report.date} <span class="badge badge-${status}">${statusLabel(status)}</span></div>
+                <div class="day-date">
+                  ${report.date} <span class="badge badge-${status}">${statusLabel(status)}</span>
+                  <button class="btn btn-sm btn-danger btn-del-report" data-date="${report.date}" data-student="${studentId}" title="Удалить отчёт" style="float:right;">&times;</button>
+                </div>
                 <div class="day-stats">
                   <span>Калории:</span><strong>${r(t.calories)}</strong>
                   <span>Белки:</span><strong>${r(t.protein)} г</strong>
@@ -766,6 +768,19 @@ const UI = (() => {
     container.querySelector('.btn-csv-one')?.addEventListener('click', () => {
       Reports.exportStudentCSV(studentId, student.name);
       toast('CSV скачан');
+    });
+
+    $$('.btn-del-report', container).forEach(btn => {
+      btn.onclick = async (e) => {
+        e.stopPropagation();
+        if (confirm(`Удалить отчёт за ${btn.dataset.date}?`)) {
+          showLoading('Удаляем...');
+          await Database.deleteReport(btn.dataset.student, btn.dataset.date);
+          hideLoading();
+          toast('Отчёт удалён');
+          renderStudentDetail(container, { studentId: btn.dataset.student });
+        }
+      };
     });
 
     $$('.day-card', container).forEach(card => {
@@ -974,7 +989,7 @@ const UI = (() => {
         <div style="margin-top:2rem;">
           <h3 class="card-title">По отдельному студенту</h3>
           ${Auth.getAllStudents().map(s => `
-            <div style="display:flex; align-items:center; justify-content:space-between; padding:0.5rem 0; border-bottom:1px solid var(--gray-light);">
+            <div class="export-student-row">
               <span>${escHtml(s.name)}</span>
               <button class="btn btn-sm btn-outline btn-export-one" data-id="${s.id}" data-name="${escHtml(s.name)}">Скачать CSV</button>
             </div>
@@ -1126,9 +1141,9 @@ const UI = (() => {
         </div>
       </div>
 
-      <div style="margin-top:1rem;">
+      <div class="action-buttons" style="margin-top:1rem;">
         <button class="btn btn-primary" id="btn-save-norms">Сохранить нормы</button>
-        <button class="btn btn-secondary" id="btn-reset-norms" style="margin-left:0.5rem;">Сбросить к значениям по умолчанию</button>
+        <button class="btn btn-secondary" id="btn-reset-norms">Сбросить к значениям по умолчанию</button>
       </div>
     `;
 

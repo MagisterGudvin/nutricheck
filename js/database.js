@@ -230,6 +230,37 @@ const Database = (() => {
     await Storage.saveReports(all);
   }
 
+  async function deleteReport(studentId, date) {
+    const all = Storage.getReports();
+    if (!all[studentId]) return;
+    all[studentId] = all[studentId].filter(r => r.date !== date);
+    if (all[studentId].length === 0) delete all[studentId];
+    await Storage.saveReports(all);
+    // Удаляем комментарий
+    const comments = Storage.getComments();
+    const key = studentId + '_' + date;
+    if (comments[key]) {
+      delete comments[key];
+      await Storage.saveComments(comments);
+    }
+  }
+
+  async function deleteAllReports(studentId) {
+    const all = Storage.getReports();
+    delete all[studentId];
+    await Storage.saveReports(all);
+    // Удаляем все комментарии студента
+    const comments = Storage.getComments();
+    let changed = false;
+    for (const key of Object.keys(comments)) {
+      if (key.startsWith(studentId + '_')) {
+        delete comments[key];
+        changed = true;
+      }
+    }
+    if (changed) await Storage.saveComments(comments);
+  }
+
   async function updateReport(studentId, date, updates) {
     const all = Storage.getReports();
     if (!all[studentId]) return;
@@ -262,7 +293,7 @@ const Database = (() => {
     addProduct, updateProduct, deleteProduct,
     getNorms, saveNorms, getBooksText, searchBooks,
     getBooksIndex, uploadBook, deleteBook,
-    getReports, getAllReports, saveReport, updateReport,
+    getReports, getAllReports, saveReport, updateReport, deleteReport, deleteAllReports,
     getComment, saveComment, getAllComments
   };
 })();

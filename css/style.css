@@ -752,6 +752,30 @@ tbody tr:hover {
   font-size: 1rem;
 }
 
+/* ===== Analyze button ===== */
+.btn-analyze {
+  padding: 0.8rem 2.5rem;
+  font-size: 1rem;
+}
+
+/* ===== Action buttons row ===== */
+.action-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+/* ===== Export student row ===== */
+.export-student-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.5rem 0;
+  border-bottom: 1px solid var(--gray-light);
+  gap: 0.5rem;
+}
+
 /* ===== Hidden utility ===== */
 .hidden { display: none !important; }
 
@@ -765,6 +789,8 @@ tbody tr:hover {
 @media (max-width: 768px) {
   .sidebar {
     transform: translateX(-100%);
+    z-index: 100;
+    transition: transform 0.25s ease;
   }
 
   .sidebar.open {
@@ -785,6 +811,10 @@ tbody tr:hover {
     padding-top: 4rem;
   }
 
+  .page-header h2 {
+    font-size: 1.3rem;
+  }
+
   .form-row {
     grid-template-columns: 1fr;
   }
@@ -795,18 +825,175 @@ tbody tr:hover {
 
   .auth-card {
     padding: 1.5rem;
+    margin: 0 0.5rem;
   }
 
   .modal {
     padding: 1.5rem;
     margin: 0.5rem;
+    max-width: calc(100vw - 1rem);
+  }
+
+  .card {
+    padding: 1rem;
+  }
+
+  /* Tables: smaller font, better scroll */
+  .table-wrap {
+    margin: 0 -1rem;
+    padding: 0 1rem;
+  }
+
+  table { font-size: 0.8rem; }
+
+  th, td {
+    padding: 0.4rem 0.5rem;
+    white-space: nowrap;
+  }
+
+  /* Product actions */
+  .product-actions {
+    flex-direction: column;
+  }
+
+  .product-search {
+    max-width: 100%;
+  }
+
+  /* Day cards */
+  .day-cards {
+    grid-template-columns: 1fr;
+  }
+
+  /* Week summary */
+  .week-summary {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .week-stat .stat-value {
+    font-size: 1.3rem;
+  }
+
+  /* Toast */
+  .toast-container {
+    left: 1rem;
+    right: 1rem;
+    bottom: 1rem;
+  }
+
+  .toast {
+    max-width: 100%;
+  }
+
+  /* Buttons: bigger touch targets */
+  .btn {
+    min-height: 42px;
+    padding: 0.5rem 1rem;
+  }
+
+  .btn-sm {
+    min-height: 36px;
+  }
+
+  /* Student detail: delete buttons */
+  .student-row td:last-child {
+    white-space: nowrap;
+  }
+
+  /* Comment box */
+  .comment-box {
+    padding: 0.8rem;
+  }
+
+  /* Hint box */
+  .hint-box {
+    font-size: 0.82rem;
+  }
+
+  /* Analyze button full width */
+  .btn-analyze {
+    width: 100%;
+    padding: 0.8rem 1rem;
+  }
+
+  /* Action buttons stack on mobile */
+  .action-buttons {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .action-buttons .btn {
+    text-align: center;
+  }
+
+  /* Export student rows */
+  .export-student-row {
+    flex-wrap: wrap;
   }
 }
 
 @media (max-width: 480px) {
   html { font-size: 14px; }
 
+  .main-content {
+    padding: 0.75rem;
+    padding-top: 3.5rem;
+  }
+
+  .page-header h2 {
+    font-size: 1.15rem;
+  }
+
+  .page-header {
+    margin-bottom: 1rem;
+  }
+
   .week-summary {
     grid-template-columns: 1fr 1fr;
+    gap: 0.5rem;
+  }
+
+  .week-stat {
+    padding: 0.6rem;
+  }
+
+  .week-stat .stat-value {
+    font-size: 1.1rem;
+  }
+
+  .auth-card h1 {
+    font-size: 1.4rem;
+  }
+
+  /* Stack action buttons vertically */
+  .modal-actions {
+    flex-direction: column;
+  }
+
+  .modal-actions .btn {
+    width: 100%;
+  }
+
+  .card {
+    padding: 0.8rem;
+    margin-bottom: 1rem;
+  }
+
+  .day-card {
+    padding: 0.8rem;
+  }
+
+  table { font-size: 0.75rem; }
+
+  th, td {
+    padding: 0.3rem 0.4rem;
+  }
+
+  .empty-state {
+    padding: 2rem 0.5rem;
+  }
+
+  .empty-state .empty-icon {
+    font-size: 2rem;
   }
 }
