@@ -14,12 +14,36 @@ const API = (() => {
     await Storage.saveConfig(config);
   }
 
+  /**
+   * Извлекает ключевые слова из текста рациона для поиска по книге.
+   * Разбивает на слова, убирает короткие/служебные, оставляет существительные продуктов.
+   */
+  function extractKeywords(breakfast, lunch, dinner) {
+    const text = [breakfast, lunch, dinner].filter(Boolean).join(' ');
+    const stopWords = new Set([
+      'и', 'с', 'в', 'на', 'из', 'по', 'не', 'за', 'от', 'до', 'без', 'для',
+      'или', 'но', 'что', 'как', 'это', 'так', 'уже', 'ещё', 'еще', 'тоже',
+      'грамм', 'порция', 'кусок', 'штук', 'штука', 'ложка', 'стакан', 'чашка',
+      'тарелка', 'немного', 'много', 'мало', 'около', 'примерно',
+    ]);
+    const words = text
+      .toLowerCase()
+      .replace(/[^а-яёa-z\s-]/g, ' ')
+      .split(/\s+/)
+      .filter(w => w.length >= 3 && !stopWords.has(w));
+    // Уникальные
+    return [...new Set(words)];
+  }
+
   async function analyze(breakfast, lunch, dinner) {
     const products = Database.getProducts();
     const norms = Database.getNorms();
-    const booksText = Database.getBooksText();
 
-    const systemPrompt = buildSystemPrompt(products, norms, booksText);
+    // Ищем в книге только по упомянутым продуктам (вместо передачи всей книги)
+    const keywords = extractKeywords(breakfast, lunch, dinner);
+    const booksExcerpt = Database.searchBooks(keywords);
+
+    const systemPrompt = buildSystemPrompt(products, norms, booksExcerpt);
     const userMessage = buildUserMessage(breakfast, lunch, dinner);
 
     const url = getProxyUrl();
@@ -49,17 +73,27 @@ const API = (() => {
     return parseResponse(text);
   }
 
-  function buildSystemPrompt(products, norms, booksText) {
+  function buildSystemPrompt(products, norms, booksExcerpt) {
+    const hasManualProducts = products && products.length > 0;
+    const productsSection = hasManualProducts
+      ? `БАЗА ПРОДУКТОВ (приоритетный источник, добавлено вручную преподавателем):\n${JSON.stringify(products, null, 2)}`
+      : 'БАЗА ПРОДУКТОВ: (пока пуста — используй данные из книг ниже)';
+
     return `Ты — нутрициолог-аналитик. Проанализируй рацион студента.
 
-ОСНОВНОЙ ИСТОЧНИК ДАННЫХ — КНИГИ И БАЗА, СОСТАВЛЕННАЯ ИЗ КНИГ.
-Не используй собственные знания о составе продуктов. Бери данные ТОЛЬКО из источников ниже.
+ИСТОЧНИКИ ДАННЫХ (по приоритету):
+1. Ручная база продуктов (если есть) — данные от преподавателя
+2. Фрагменты из справочника Скурихина «Химический состав российских продуктов питания» (2008)
+3. Только если продукта нет ни в базе, ни в книге — используй свои знания, но ОБЯЗАТЕЛЬНО отметь это в поле source: "оценка ИИ"
 
-БАЗА ПРОДУКТОВ (составлена из книг, приоритетный источник):
-${JSON.stringify(products, null, 2)}
+${productsSection}
 
-ДОПОЛНИТЕЛЬНЫЙ КОНТЕКСТ ИЗ КНИГ (если продукта нет в базе — ищи здесь):
-${booksText || '(книги не загружены)'}
+ДАННЫЕ ИЗ СПРАВОЧНИКА СКУРИХИНА (фрагменты таблиц по указанным продуктам):
+Таблицы содержат данные на 100 г съедобной части. Колонки левой части: Код, Продукты, Порция, Вода, Бел(белки%), Жир%, НЖК, Хол(мг%), МДС, Кр(крахмал), Угл(углеводы%), ПВ(пищ.волокна), ОК, Зола.
+Колонки правой части: Na, К, Са, Мд, Р, Fe, А(мкг%), Кар, РЭ, ТЭ, B1, В2, РР, НЭ, С, ЭЦ(ккал), Код.
+Для каждого продукта 3 строки: 1) на 100 г, 2) на порцию, 3) %суточной потребности.
+
+${booksExcerpt}
 
 СУТОЧНЫЕ НОРМЫ:
 ${JSON.stringify(norms, null, 2)}

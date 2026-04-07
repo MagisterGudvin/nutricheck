@@ -93,6 +93,90 @@ const Database = (() => {
     return booksContent.map(b => `--- Файл: ${b.file} ---\n${b.text}`).join('\n\n');
   }
 
+  /**
+   * Поиск фрагментов книги по ключевым словам продуктов.
+   * Возвращает только релевантные строки (±context) вместо всей книги,
+   * чтобы уместиться в контекст Claude API.
+   */
+  function searchBooks(keywords) {
+    if (!booksContent.length || !keywords.length) return '(книги не загружены)';
+
+    const CONTEXT_LINES = 4; // строк до/после совпадения
+    const MAX_CHARS = 80000; // ~20K токенов — безопасный лимит для части промпта
+    const results = [];
+    let totalChars = 0;
+
+    // Также всегда включаем заголовки таблиц и нормы
+    const tableHeaders = [];
+
+    for (const book of booksContent) {
+      const lines = book.text.split('\n');
+
+      // Собираем индексы заголовков таблиц (строки с "Код | Продукты | Порция")
+      for (let i = 0; i < lines.length; i++) {
+        if (/Код.*Продукты.*Порция|Na.*К.*Са.*Мд.*Р.*Fe/.test(lines[i])) {
+          tableHeaders.push(i);
+        }
+      }
+
+      const matchedLines = new Set();
+
+      for (const kw of keywords) {
+        if (!kw || kw.length < 2) continue;
+        // Экранируем спецсимволы regex
+        const escaped = kw.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+        const re = new RegExp(escaped, 'i');
+
+        for (let i = 0; i < lines.length; i++) {
+          if (re.test(lines[i])) {
+            // Добавляем строку и контекст
+            for (let j = Math.max(0, i - CONTEXT_LINES); j <= Math.min(lines.length - 1, i + CONTEXT_LINES); j++) {
+              matchedLines.add(j);
+            }
+            // Ищем ближайший заголовок таблицы выше — чтобы было понятно какие колонки
+            for (const h of tableHeaders) {
+              if (h <= i && i - h < 50) {
+                for (let j = h; j <= Math.min(lines.length - 1, h + 2); j++) {
+                  matchedLines.add(j);
+                }
+              }
+            }
+          }
+        }
+      }
+
+      if (matchedLines.size === 0) continue;
+
+      // Сортируем и группируем в блоки
+      const sorted = [...matchedLines].sort((a, b) => a - b);
+      let block = [];
+      let prevLine = -10;
+
+      for (const lineIdx of sorted) {
+        if (lineIdx - prevLine > 2 && block.length > 0) {
+          const text = block.join('\n');
+          if (totalChars + text.length > MAX_CHARS) break;
+          results.push(text);
+          totalChars += text.length;
+          block = [];
+        }
+        block.push(lines[lineIdx]);
+        prevLine = lineIdx;
+      }
+      if (block.length > 0) {
+        const text = block.join('\n');
+        if (totalChars + text.length <= MAX_CHARS) {
+          results.push(text);
+          totalChars += text.length;
+        }
+      }
+    }
+
+    return results.length > 0
+      ? results.join('\n---\n')
+      : '(по указанным продуктам в книгах ничего не найдено)';
+  }
+
   // ===== Отчёты (через Storage → GitHub) =====
 
   function getReports(studentId) {
@@ -148,7 +232,7 @@ const Database = (() => {
   return {
     init, getProducts, saveProducts, resetProducts, hasOverride,
     addProduct, updateProduct, deleteProduct,
-    getNorms, getBooksText,
+    getNorms, getBooksText, searchBooks,
     getReports, getAllReports, saveReport, updateReport,
     getComment, saveComment, getAllComments
   };
