@@ -136,8 +136,9 @@ const UI = (() => {
       nav.innerHTML = `
         <a href="#students" data-page="students"><span class="nav-icon">&#128101;</span> Студенты</a>
         <a href="#products" data-page="products"><span class="nav-icon">&#128218;</span> База продуктов</a>
+        <a href="#norms" data-page="norms"><span class="nav-icon">&#9878;</span> Нормы</a>
+        <a href="#books" data-page="books"><span class="nav-icon">&#128214;</span> Книги</a>
         <a href="#export" data-page="export"><span class="nav-icon">&#128190;</span> Экспорт</a>
-        <a href="#settings" data-page="settings"><span class="nav-icon">&#9881;</span> Настройки</a>
       `;
     }
   }
@@ -165,6 +166,8 @@ const UI = (() => {
       case 'students': renderStudents(content); break;
       case 'student-detail': renderStudentDetail(content, params); break;
       case 'products': renderProducts(content); break;
+      case 'norms': renderNorms(content); break;
+      case 'books': renderBooks(content); break;
       case 'export': renderExport(content); break;
       case 'settings': renderSettings(content); break;
       default:
@@ -332,8 +335,10 @@ const UI = (() => {
     let rows = '';
     for (const [name, items] of meals) {
       if (!items || !items.length) continue;
-      rows += `<tr><td colspan="6" style="font-weight:700; background:var(--gray-light);">${name}</td></tr>`;
+      rows += `<tr><td colspan="7" style="font-weight:700; background:var(--gray-light);">${name}</td></tr>`;
       for (const item of items) {
+        const src = item.source || '';
+        const srcClass = src.includes('ИИ') ? 'src-ai' : (src.includes('Скурихин') ? 'src-book' : 'src-db');
         rows += `<tr>
           <td>${item.product}</td>
           <td>${item.portion_g || '-'}</td>
@@ -341,6 +346,7 @@ const UI = (() => {
           <td>${r(item.protein)}</td>
           <td>${r(item.fat)}</td>
           <td>${r(item.carbs)}</td>
+          <td class="cell-source ${srcClass}">${escHtml(src)}</td>
         </tr>`;
       }
     }
@@ -350,7 +356,7 @@ const UI = (() => {
         <h3>Продукты по приёмам пищи</h3>
         <div class="table-wrap">
           <table>
-            <thead><tr><th>Продукт</th><th>Порция (г)</th><th>Ккал</th><th>Белки</th><th>Жиры</th><th>Углеводы</th></tr></thead>
+            <thead><tr><th>Продукт</th><th>Порция (г)</th><th>Ккал</th><th>Белки</th><th>Жиры</th><th>Углеводы</th><th>Источник</th></tr></thead>
             <tbody>${rows}</tbody>
           </table>
         </div>
@@ -665,6 +671,7 @@ const UI = (() => {
                     <td>
                       <button class="btn btn-sm btn-outline btn-view-student" data-id="${s.id}">Открыть</button>
                       <button class="btn btn-sm btn-outline btn-csv-student" data-id="${s.id}" data-name="${escHtml(s.name)}">CSV</button>
+                      <button class="btn btn-sm btn-danger btn-del-student" data-id="${s.id}" data-name="${escHtml(s.name)}">&times;</button>
                     </td>
                   </tr>`;
                 }).join('')}
@@ -687,6 +694,19 @@ const UI = (() => {
         e.stopPropagation();
         Reports.exportStudentCSV(btn.dataset.id, btn.dataset.name);
         toast('CSV скачан');
+      };
+    });
+
+    $$('.btn-del-student', container).forEach(btn => {
+      btn.onclick = async (e) => {
+        e.stopPropagation();
+        if (confirm(`Удалить студента "${btn.dataset.name}"? Все его отчёты останутся в базе.`)) {
+          showLoading('Удаляем...');
+          await Auth.deleteStudent(btn.dataset.id);
+          hideLoading();
+          toast('Студент удалён');
+          renderStudents(container);
+        }
       };
     });
 
@@ -764,6 +784,7 @@ const UI = (() => {
       <div class="page-header">
         <h2>База продуктов</h2>
         <p>Всего: ${products.length} продуктов ${Database.hasOverride() ? '(есть правки преподавателя)' : '(из книг)'}</p>
+        ${products.length === 0 ? '<div class="hint-box">База пуста. При анализе рациона данные о составе продуктов берутся из загруженных книг (справочник Скурихина). Добавляйте продукты вручную, только если хотите уточнить или дополнить данные из книг.</div>' : ''}
       </div>
 
       <div class="product-actions">
@@ -973,6 +994,188 @@ const UI = (() => {
         toast('CSV скачан');
       };
     });
+  }
+
+  // ===== Books (teacher) =====
+
+  function renderBooks(container) {
+    const books = Database.getBooksIndex();
+
+    container.innerHTML = `
+      <div class="page-header">
+        <h2>Книги</h2>
+        <p>Справочники для анализа состава продуктов. Только формат .md</p>
+      </div>
+
+      <div class="card">
+        <div class="form-group">
+          <label for="book-upload">Загрузить книгу (.md)</label>
+          <input type="file" id="book-upload" accept=".md" style="margin-bottom:0.5rem;">
+          <div class="form-hint">Файл в формате Markdown. Таблицы состава продуктов будут использоваться при анализе рациона.</div>
+        </div>
+        <button class="btn btn-primary" id="btn-upload-book">Загрузить</button>
+      </div>
+
+      <div class="card">
+        <h3 class="card-title">Загруженные книги (${books.length})</h3>
+        ${books.length === 0 ? '<p style="color:var(--gray)">Нет загруженных книг</p>' : `
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th>Файл</th><th>Действия</th></tr></thead>
+              <tbody>
+                ${books.map(f => `
+                  <tr>
+                    <td>${escHtml(f)}</td>
+                    <td><button class="btn btn-sm btn-danger btn-del-book" data-file="${escHtml(f)}">&times; Удалить</button></td>
+                  </tr>
+                `).join('')}
+              </tbody>
+            </table>
+          </div>
+        `}
+      </div>
+    `;
+
+    $('#btn-upload-book').onclick = async () => {
+      const input = $('#book-upload');
+      if (!input.files || !input.files.length) {
+        toast('Выберите файл .md', 'error');
+        return;
+      }
+      const file = input.files[0];
+      if (!file.name.endsWith('.md')) {
+        toast('Допускается только формат .md', 'error');
+        return;
+      }
+      showLoading('Загружаем книгу...');
+      try {
+        const text = await file.text();
+        await Database.uploadBook(file.name, text);
+        hideLoading();
+        toast('Книга загружена: ' + file.name);
+        renderBooks(container);
+      } catch (e) {
+        hideLoading();
+        toast('Ошибка: ' + e.message, 'error');
+      }
+    };
+
+    $$('.btn-del-book', container).forEach(btn => {
+      btn.onclick = async () => {
+        const filename = btn.dataset.file;
+        if (confirm(`Удалить книгу "${filename}"?`)) {
+          showLoading('Удаляем...');
+          try {
+            await Database.deleteBook(filename);
+            hideLoading();
+            toast('Книга удалена');
+            renderBooks(container);
+          } catch (e) {
+            hideLoading();
+            toast('Ошибка: ' + e.message, 'error');
+          }
+        }
+      };
+    });
+  }
+
+  // ===== Norms (teacher) =====
+
+  function renderNorms(container) {
+    const norms = Database.getNorms();
+    const aa = norms.amino_acids || {};
+
+    container.innerHTML = `
+      <div class="page-header">
+        <h2>Суточные нормы</h2>
+        <p>Редактирование норм для анализа рациона</p>
+      </div>
+
+      <div class="card">
+        <h3 class="card-title">Основные показатели</h3>
+        <div class="form-row">
+          <div class="form-group"><label>Калории (ккал)</label><input type="number" id="norm-calories" value="${norms.calories || 2500}"></div>
+          <div class="form-group"><label>Белки (г)</label><input type="number" id="norm-protein" value="${norms.protein || 80}" step="0.1"></div>
+          <div class="form-group"><label>Жиры (г)</label><input type="number" id="norm-fat" value="${norms.fat || 70}" step="0.1"></div>
+          <div class="form-group"><label>Углеводы (г)</label><input type="number" id="norm-carbs" value="${norms.carbs || 350}" step="0.1"></div>
+        </div>
+        <div class="form-row">
+          <div class="form-group"><label>Быстрые углеводы макс. (г)</label><input type="number" id="norm-fast-carbs" value="${norms.fast_carbs_max || 50}" step="0.1"></div>
+          <div class="form-group"><label>Омега-3 мин. (г)</label><input type="number" id="norm-omega3" value="${norms.omega3_min || 1.1}" step="0.1"></div>
+          <div class="form-group"><label>Омега-6 макс. (г)</label><input type="number" id="norm-omega6" value="${norms.omega6_max || 17}" step="0.1"></div>
+          <div class="form-group"><label>Соотношение Омега-6/3 макс.</label><input type="number" id="norm-omega-ratio" value="${norms.omega_ratio_max || 4}" step="0.1"></div>
+        </div>
+      </div>
+
+      <div class="card">
+        <h3 class="card-title">Незаменимые аминокислоты (г/сутки)</h3>
+        <div class="form-row">
+          <div class="form-group"><label>Лейцин</label><input type="number" id="norm-aa-leucine" value="${aa.leucine || 0}" step="0.01"></div>
+          <div class="form-group"><label>Изолейцин</label><input type="number" id="norm-aa-isoleucine" value="${aa.isoleucine || 0}" step="0.01"></div>
+          <div class="form-group"><label>Валин</label><input type="number" id="norm-aa-valine" value="${aa.valine || 0}" step="0.01"></div>
+        </div>
+        <div class="form-row">
+          <div class="form-group"><label>Лизин</label><input type="number" id="norm-aa-lysine" value="${aa.lysine || 0}" step="0.01"></div>
+          <div class="form-group"><label>Метионин</label><input type="number" id="norm-aa-methionine" value="${aa.methionine || 0}" step="0.01"></div>
+          <div class="form-group"><label>Фенилаланин</label><input type="number" id="norm-aa-phenylalanine" value="${aa.phenylalanine || 0}" step="0.01"></div>
+        </div>
+        <div class="form-row">
+          <div class="form-group"><label>Треонин</label><input type="number" id="norm-aa-threonine" value="${aa.threonine || 0}" step="0.01"></div>
+          <div class="form-group"><label>Триптофан</label><input type="number" id="norm-aa-tryptophan" value="${aa.tryptophan || 0}" step="0.01"></div>
+          <div class="form-group"><label>Гистидин</label><input type="number" id="norm-aa-histidine" value="${aa.histidine || 0}" step="0.01"></div>
+        </div>
+      </div>
+
+      <div style="margin-top:1rem;">
+        <button class="btn btn-primary" id="btn-save-norms">Сохранить нормы</button>
+        <button class="btn btn-secondary" id="btn-reset-norms" style="margin-left:0.5rem;">Сбросить к значениям по умолчанию</button>
+      </div>
+    `;
+
+    $('#btn-save-norms').onclick = async () => {
+      const updated = {
+        calories: Number($('#norm-calories').value),
+        protein: Number($('#norm-protein').value),
+        fat: Number($('#norm-fat').value),
+        carbs: Number($('#norm-carbs').value),
+        fast_carbs_max: Number($('#norm-fast-carbs').value),
+        amino_acids: {
+          leucine: Number($('#norm-aa-leucine').value),
+          isoleucine: Number($('#norm-aa-isoleucine').value),
+          valine: Number($('#norm-aa-valine').value),
+          lysine: Number($('#norm-aa-lysine').value),
+          methionine: Number($('#norm-aa-methionine').value),
+          phenylalanine: Number($('#norm-aa-phenylalanine').value),
+          threonine: Number($('#norm-aa-threonine').value),
+          tryptophan: Number($('#norm-aa-tryptophan').value),
+          histidine: Number($('#norm-aa-histidine').value),
+        },
+        omega3_min: Number($('#norm-omega3').value),
+        omega6_max: Number($('#norm-omega6').value),
+        omega_ratio_max: Number($('#norm-omega-ratio').value),
+      };
+      showLoading('Сохраняем нормы...');
+      await Database.saveNorms(updated);
+      hideLoading();
+      toast('Нормы сохранены');
+    };
+
+    $('#btn-reset-norms').onclick = async () => {
+      const defaults = {
+        calories: 2500, protein: 80, fat: 70, carbs: 350, fast_carbs_max: 50,
+        amino_acids: {
+          leucine: 2.7, isoleucine: 1.4, valine: 1.8, lysine: 2.1,
+          methionine: 0.7, phenylalanine: 1.6, threonine: 1.0,
+          tryptophan: 0.28, histidine: 0.7
+        },
+        omega3_min: 1.1, omega6_max: 17, omega_ratio_max: 4
+      };
+      showLoading('Сброс норм...');
+      await Database.saveNorms(defaults);
+      hideLoading();
+      toast('Нормы сброшены к значениям по умолчанию');
+      renderNorms(container);
+    };
   }
 
   // ===== Settings =====

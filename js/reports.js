@@ -19,7 +19,7 @@ const Reports = (() => {
       'Калории', 'Белки', 'Жиры', 'Углеводы',
       ...AMINO_KEYS.map(k => Analysis.AMINO_NAMES[k]),
       'Омега-3', 'Омега-6',
-      'Статус', 'Комментарий преподавателя'
+      'Источник', 'Статус', 'Комментарий преподавателя'
     ];
 
     const rows = [headers];
@@ -39,7 +39,7 @@ const Reports = (() => {
               item.calories, item.protein, item.fat, item.carbs,
               ...AMINO_KEYS.map(k => aa[k] || 0),
               item.omega3 || 0, item.omega6 || 0,
-              status, comment
+              item.source || '', status, comment
             ]);
           }
         }
@@ -75,7 +75,7 @@ const Reports = (() => {
       'Калории', 'Белки', 'Жиры', 'Углеводы',
       ...AMINO_KEYS.map(k => Analysis.AMINO_NAMES[k]),
       'Омега-3', 'Омега-6',
-      'Статус', 'Комментарий преподавателя'
+      'Источник', 'Статус', 'Комментарий преподавателя'
     ];
 
     const rows = [headers];
@@ -97,7 +97,7 @@ const Reports = (() => {
                 item.calories, item.protein, item.fat, item.carbs,
                 ...AMINO_KEYS.map(k => aa[k] || 0),
                 item.omega3 || 0, item.omega6 || 0,
-                status, comment
+                item.source || '', status, comment
               ]);
             }
           }
@@ -108,11 +108,28 @@ const Reports = (() => {
     downloadCSV(rows, `отчёт_все_студенты_${new Date().toISOString().slice(0,10)}.csv`);
   }
 
+  /**
+   * Форматирует ячейку для CSV: числа с точкой → запятая (русская локаль Excel),
+   * иначе Excel интерпретирует "0.1" как дату "01.янв".
+   */
+  function formatCell(cell) {
+    if (cell == null) return '';
+    if (typeof cell === 'number') {
+      return String(cell).replace('.', ',');
+    }
+    const s = String(cell);
+    // Числовая строка с точкой — тоже конвертируем
+    if (/^\d+\.\d+$/.test(s)) {
+      return s.replace('.', ',');
+    }
+    return s;
+  }
+
   function downloadCSV(rows, filename) {
     const bom = '\uFEFF'; // BOM для Excel
     const csv = bom + rows.map(row =>
       row.map(cell => {
-        const s = String(cell == null ? '' : cell);
+        const s = formatCell(cell);
         if (s.includes(CSV_SEPARATOR) || s.includes('"') || s.includes('\n')) {
           return '"' + s.replace(/"/g, '""') + '"';
         }

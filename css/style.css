@@ -160,6 +160,15 @@ textarea {
   font-weight: 600;
 }
 
+.sidebar-footer .btn-outline {
+  color: var(--white);
+  border-color: rgba(255,255,255,0.3);
+}
+.sidebar-footer .btn-outline:hover {
+  border-color: var(--green);
+  color: var(--green);
+}
+
 /* ===== Main content ===== */
 .main-content {
   flex: 1;
@@ -501,6 +510,24 @@ tbody tr:hover {
 /* ===== Report section ===== */
 .report-section {
   margin-bottom: 2rem;
+}
+
+.cell-source {
+  font-size: 0.75rem;
+  white-space: nowrap;
+}
+.src-book { color: var(--green); }
+.src-db { color: var(--blue, #0984e3); }
+.src-ai { color: var(--orange, #e17055); font-style: italic; }
+
+.hint-box {
+  background: #ffeaa7;
+  color: #2d3436;
+  padding: 0.8rem 1rem;
+  border-radius: 8px;
+  font-size: 0.88rem;
+  margin-top: 0.8rem;
+  line-height: 1.5;
 }
 
 .report-section h3 {

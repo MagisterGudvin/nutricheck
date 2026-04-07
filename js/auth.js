@@ -89,5 +89,10 @@ const Auth = (() => {
     return getUsers().find(u => u.id === id);
   }
 
-  return { register, login, logout, getSession, isTeacher, isStudent, getAllStudents, getStudentById };
+  async function deleteStudent(id) {
+    const users = getUsers().filter(u => u.id !== id);
+    await Storage.saveUsers(users);
+  }
+
+  return { register, login, logout, getSession, isTeacher, isStudent, getAllStudents, getStudentById, deleteStudent };
 })();

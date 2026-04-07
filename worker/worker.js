@@ -51,6 +51,28 @@ export default {
         return handleWriteFile(file, body, env);
       }
 
+      // --- Books: read file (text) ---
+      if (path.startsWith('/books/') && request.method === 'GET') {
+        const file = 'books/' + path.slice(7);
+        return handleReadTextFile(file, env);
+      }
+
+      // --- Books: write file (text, .md only) ---
+      if (path.startsWith('/books/') && request.method === 'PUT') {
+        const file = 'books/' + path.slice(7);
+        if (!file.endsWith('.md') && !file.endsWith('.json')) {
+          return jsonResponse({ error: 'Only .md and .json files allowed in books/' }, 400);
+        }
+        const body = await request.json();
+        return handleWriteTextFile(file, body, env);
+      }
+
+      // --- Books: delete file ---
+      if (path.startsWith('/books/') && request.method === 'DELETE') {
+        const file = 'books/' + path.slice(7);
+        return handleDeleteFile(file, env);
+      }
+
       return jsonResponse({ error: 'Not found' }, 404);
     } catch (err) {
       return jsonResponse({ error: err.message }, 500);
@@ -106,7 +128,12 @@ async function handleReadFile(filePath, env) {
   }
 
   const meta = await res.json();
-  const content = atob(meta.content);
+  // atob возвращает бинарную строку; для корректной декодировки UTF-8 (кириллица)
+  // нужно пропустить через Uint8Array → TextDecoder
+  const binary = atob(meta.content.replace(/\n/g, ''));
+  const bytes = new Uint8Array(binary.length);
+  for (let i = 0; i < binary.length; i++) bytes[i] = binary.charCodeAt(i);
+  const content = new TextDecoder('utf-8').decode(bytes);
   const data = JSON.parse(content);
 
   return jsonResponse({ data, sha: meta.sha });
@@ -167,4 +194,137 @@ async function handleWriteFile(filePath, body, env) {
 
   const result = await putRes.json();
   return jsonResponse({ ok: true, sha: result.content.sha });
+}
+
+// ===== GitHub API: read text file (books) =====
+
+async function handleReadTextFile(filePath, env) {
+  const repo = env.GITHUB_REPO;
+  const branch = env.GITHUB_BRANCH || 'main';
+  const token = env.GITHUB_TOKEN;
+
+  const apiUrl = `https://api.github.com/repos/${repo}/contents/${filePath}?ref=${branch}`;
+  const res = await fetch(apiUrl, {
+    headers: {
+      'Authorization': `Bearer ${token}`,
+      'Accept': 'application/vnd.github.v3+json',
+      'User-Agent': 'NutriCheck-Worker',
+    },
+  });
+
+  if (!res.ok) {
+    if (res.status === 404) return jsonResponse(null);
+    const err = await res.text();
+    return jsonResponse({ error: 'GitHub read error: ' + err }, res.status);
+  }
+
+  const meta = await res.json();
+  const binary = atob(meta.content.replace(/\n/g, ''));
+  const bytes = new Uint8Array(binary.length);
+  for (let i = 0; i < binary.length; i++) bytes[i] = binary.charCodeAt(i);
+  const text = new TextDecoder('utf-8').decode(bytes);
+
+  return jsonResponse({ text, sha: meta.sha });
+}
+
+// ===== GitHub API: write text file (books) =====
+
+async function handleWriteTextFile(filePath, body, env) {
+  const repo = env.GITHUB_REPO;
+  const branch = env.GITHUB_BRANCH || 'main';
+  const token = env.GITHUB_TOKEN;
+
+  // body.text — текстовое содержимое файла
+  // body.message — commit message
+  const encoder = new TextEncoder();
+  const encoded = encoder.encode(body.text);
+  let binaryStr = '';
+  for (let i = 0; i < encoded.length; i++) binaryStr += String.fromCharCode(encoded[i]);
+  const content = btoa(binaryStr);
+  const commitMessage = body.message || `Update ${filePath}`;
+
+  // Получаем текущий SHA
+  const getUrl = `https://api.github.com/repos/${repo}/contents/${filePath}?ref=${branch}`;
+  const getRes = await fetch(getUrl, {
+    headers: {
+      'Authorization': `Bearer ${token}`,
+      'Accept': 'application/vnd.github.v3+json',
+      'User-Agent': 'NutriCheck-Worker',
+    },
+  });
+
+  let sha = null;
+  if (getRes.ok) {
+    const meta = await getRes.json();
+    sha = meta.sha;
+  }
+
+  const putUrl = `https://api.github.com/repos/${repo}/contents/${filePath}`;
+  const putBody = { message: commitMessage, content, branch };
+  if (sha) putBody.sha = sha;
+
+  const putRes = await fetch(putUrl, {
+    method: 'PUT',
+    headers: {
+      'Authorization': `Bearer ${token}`,
+      'Content-Type': 'application/json',
+      'Accept': 'application/vnd.github.v3+json',
+      'User-Agent': 'NutriCheck-Worker',
+    },
+    body: JSON.stringify(putBody),
+  });
+
+  if (!putRes.ok) {
+    const err = await putRes.text();
+    return jsonResponse({ error: 'GitHub write error: ' + err }, putRes.status);
+  }
+
+  const result = await putRes.json();
+  return jsonResponse({ ok: true, sha: result.content.sha });
+}
+
+// ===== GitHub API: delete file =====
+
+async function handleDeleteFile(filePath, env) {
+  const repo = env.GITHUB_REPO;
+  const branch = env.GITHUB_BRANCH || 'main';
+  const token = env.GITHUB_TOKEN;
+
+  // Получаем SHA
+  const getUrl = `https://api.github.com/repos/${repo}/contents/${filePath}?ref=${branch}`;
+  const getRes = await fetch(getUrl, {
+    headers: {
+      'Authorization': `Bearer ${token}`,
+      'Accept': 'application/vnd.github.v3+json',
+      'User-Agent': 'NutriCheck-Worker',
+    },
+  });
+
+  if (!getRes.ok) {
+    return jsonResponse({ error: 'File not found' }, 404);
+  }
+
+  const meta = await getRes.json();
+
+  const delRes = await fetch(`https://api.github.com/repos/${repo}/contents/${filePath}`, {
+    method: 'DELETE',
+    headers: {
+      'Authorization': `Bearer ${token}`,
+      'Content-Type': 'application/json',
+      'Accept': 'application/vnd.github.v3+json',
+      'User-Agent': 'NutriCheck-Worker',
+    },
+    body: JSON.stringify({
+      message: `Delete ${filePath}`,
+      sha: meta.sha,
+      branch,
+    }),
+  });
+
+  if (!delRes.ok) {
+    const err = await delRes.text();
+    return jsonResponse({ error: 'GitHub delete error: ' + err }, delRes.status);
+  }
+
+  return jsonResponse({ ok: true });
 }

@@ -70,11 +70,14 @@ const App = (() => {
         case 'products':
           UI.renderPage('products');
           break;
+        case 'norms':
+          UI.renderPage('norms');
+          break;
+        case 'books':
+          UI.renderPage('books');
+          break;
         case 'export':
           UI.renderPage('export');
-          break;
-        case 'settings':
-          UI.renderPage('settings');
           break;
         default:
           UI.renderPage('students');

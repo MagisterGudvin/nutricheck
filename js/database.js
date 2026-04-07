@@ -30,18 +30,41 @@ const Database = (() => {
     await Storage.init();
   }
 
+  let booksIndex = [];
+
   async function loadBooks() {
     try {
       const indexRes = await fetch('books/index.json');
-      const files = await indexRes.json();
-      const promises = files.map(f =>
+      booksIndex = await indexRes.json();
+      const promises = booksIndex.map(f =>
         fetch('books/' + f).then(r => r.text()).then(text => ({ file: f, text }))
       );
       booksContent = await Promise.all(promises);
     } catch (e) {
       console.warn('Книги не загружены:', e);
+      booksIndex = [];
       booksContent = [];
     }
+  }
+
+  function getBooksIndex() {
+    return booksIndex;
+  }
+
+  async function uploadBook(filename, text) {
+    await Storage.uploadBook(filename, text);
+    if (!booksIndex.includes(filename)) {
+      booksIndex.push(filename);
+      await Storage.saveBooksIndex(booksIndex);
+    }
+    booksContent.push({ file: filename, text });
+  }
+
+  async function deleteBook(filename) {
+    await Storage.deleteBook(filename);
+    booksIndex = booksIndex.filter(f => f !== filename);
+    await Storage.saveBooksIndex(booksIndex);
+    booksContent = booksContent.filter(b => b.file !== filename);
   }
 
   // ===== Продукты (статика + правки через Storage → GitHub) =====
@@ -87,6 +110,11 @@ const Database = (() => {
 
   function getNorms() {
     return norms;
+  }
+
+  async function saveNorms(newNorms) {
+    norms = newNorms;
+    await Storage.saveNorms(newNorms);
   }
 
   function getBooksText() {
@@ -232,7 +260,8 @@ const Database = (() => {
   return {
     init, getProducts, saveProducts, resetProducts, hasOverride,
     addProduct, updateProduct, deleteProduct,
-    getNorms, getBooksText, searchBooks,
+    getNorms, saveNorms, getBooksText, searchBooks,
+    getBooksIndex, uploadBook, deleteBook,
     getReports, getAllReports, saveReport, updateReport,
     getComment, saveComment, getAllComments
   };

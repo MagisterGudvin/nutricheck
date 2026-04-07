@@ -179,6 +179,63 @@ const Storage = (() => {
     await writeFile('products_override', null, 'Reset products override');
   }
 
+  // ===== Norms =====
+
+  async function saveNorms(norms) {
+    await writeFile('norms', norms, 'Update norms');
+  }
+
+  // ===== Books =====
+
+  async function uploadBook(filename, text) {
+    const url = getWorkerUrl();
+    if (!url) throw new Error('URL Worker не настроен');
+
+    const res = await fetch(`${url}/books/${encodeURIComponent(filename)}`, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ text, message: `Upload book: ${filename}` }),
+    });
+
+    if (!res.ok) {
+      const err = await res.json().catch(() => ({}));
+      throw new Error(err.error || `Ошибка загрузки книги: ${res.status}`);
+    }
+    return res.json();
+  }
+
+  async function deleteBook(filename) {
+    const url = getWorkerUrl();
+    if (!url) throw new Error('URL Worker не настроен');
+
+    const res = await fetch(`${url}/books/${encodeURIComponent(filename)}`, {
+      method: 'DELETE',
+    });
+
+    if (!res.ok) {
+      const err = await res.json().catch(() => ({}));
+      throw new Error(err.error || `Ошибка удаления книги: ${res.status}`);
+    }
+    return res.json();
+  }
+
+  async function saveBooksIndex(files) {
+    const url = getWorkerUrl();
+    if (!url) throw new Error('URL Worker не настроен');
+
+    const res = await fetch(`${url}/books/index.json`, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ text: JSON.stringify(files, null, 2), message: 'Update books/index.json' }),
+    });
+
+    if (!res.ok) {
+      const err = await res.json().catch(() => ({}));
+      throw new Error(err.error || `Ошибка обновления index: ${res.status}`);
+    }
+    return res.json();
+  }
+
   // ===== Проверка =====
 
   function isLoaded() {
@@ -192,6 +249,8 @@ const Storage = (() => {
     getReports, saveReports,
     getComments, saveComments,
     getProductsOverride, saveProductsOverride, resetProductsOverride,
+    saveNorms,
+    uploadBook, deleteBook, saveBooksIndex,
     isLoaded,
   };
 })();
