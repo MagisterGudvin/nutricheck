@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>NutriCheck — Анализ питания студентов</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+  <!-- ===== Auth screen ===== -->
+  <div class="auth-container hidden">
+    <div class="auth-card">
+      <h1>NutriCheck</h1>
+      <div class="auth-subtitle">Анализ питания студентов</div>
+
+      <div class="auth-tabs">
+        <button class="auth-tab active" data-tab="login">Вход</button>
+        <button class="auth-tab" data-tab="register">Регистрация</button>
+      </div>
+
+      <div class="auth-error"></div>
+
+      <!-- Login form -->
+      <div id="login-form">
+        <div class="form-group">
+          <label for="login-username">Логин</label>
+          <input type="text" id="login-username" placeholder="Введите логин" autocomplete="username">
+        </div>
+        <div class="form-group">
+          <label for="login-password">Пароль</label>
+          <input type="password" id="login-password" placeholder="Введите пароль" autocomplete="current-password">
+        </div>
+        <button class="btn btn-primary btn-block" id="btn-login">Войти</button>
+        <div class="form-hint" style="text-align:center; margin-top:1rem;">
+          Преподаватель: admin / admin123
+        </div>
+      </div>
+
+      <!-- Register form -->
+      <div id="register-form" class="hidden">
+        <div class="form-group">
+          <label for="reg-name">Имя</label>
+          <input type="text" id="reg-name" placeholder="Ваше имя">
+        </div>
+        <div class="form-group">
+          <label for="reg-username">Логин</label>
+          <input type="text" id="reg-username" placeholder="Придумайте логин" autocomplete="username">
+        </div>
+        <div class="form-group">
+          <label for="reg-password">Пароль</label>
+          <input type="password" id="reg-password" placeholder="Придумайте пароль" autocomplete="new-password">
+        </div>
+        <button class="btn btn-primary btn-block" id="btn-register">Зарегистрироваться</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== App layout ===== -->
+  <div class="app-layout hidden">
+
+    <!-- Hamburger -->
+    <button class="hamburger" id="hamburger-btn">&#9776;</button>
+
+    <!-- Sidebar overlay (mobile) -->
+    <div class="sidebar-overlay"></div>
+
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <div class="sidebar-header">
+        <h1>NutriCheck</h1>
+        <div class="subtitle">Анализ питания</div>
+      </div>
+      <nav class="sidebar-nav" id="sidebar-nav"></nav>
+      <div class="sidebar-footer">
+        <div class="user-info">
+          <div class="user-name" id="user-display-name"></div>
+          <div id="user-display-role"></div>
+        </div>
+        <button class="btn btn-sm btn-outline" id="btn-logout" style="width:100%; margin-top:0.5rem;">Выйти</button>
+      </div>
+    </aside>
+
+    <!-- Main -->
+    <main class="main-content" id="page-content">
+    </main>
+  </div>
+
+  <!-- ===== Loading overlay ===== -->
+  <div class="loading-overlay hidden" id="loading-overlay">
+    <div class="spinner"></div>
+    <div class="loading-text" id="loading-text">Загрузка...</div>
+  </div>
+
+  <!-- ===== Toast container ===== -->
+  <div class="toast-container"></div>
+
+  <!-- ===== Scripts ===== -->
+  <script src="js/storage.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/database.js"></script>
+  <script src="js/api.js"></script>
+  <script src="js/analysis.js"></script>
+  <script src="js/reports.js"></script>
+  <script src="js/ui.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>

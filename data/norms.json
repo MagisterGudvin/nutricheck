@@ -1,0 +1,21 @@
+{
+  "calories": 2500,
+  "protein": 80,
+  "fat": 70,
+  "carbs": 350,
+  "fast_carbs_max": 50,
+  "amino_acids": {
+    "leucine": 2.7,
+    "isoleucine": 1.4,
+    "valine": 1.8,
+    "lysine": 2.1,
+    "methionine": 0.7,
+    "phenylalanine": 1.6,
+    "threonine": 1.0,
+    "tryptophan": 0.28,
+    "histidine": 0.7
+  },
+  "omega3_min": 1.1,
+  "omega6_max": 17,
+  "omega_ratio_max": 4
+}

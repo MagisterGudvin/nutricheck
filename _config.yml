@@ -1,0 +1,11 @@
+title: NutriCheck
+description: Анализ питания студентов
+baseurl: "/nutricheck"
+url: "https://username.github.io"
+exclude:
+  - worker/
+  - tools/
+  - node_modules/
+  - README.md
+include:
+  - books/
