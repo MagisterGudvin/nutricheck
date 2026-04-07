@@ -3,7 +3,7 @@ main = "worker.js"
 compatibility_date = "2024-01-01"
 
 [vars]
-GITHUB_REPO = "YOUR_USER/nutricheck"
+GITHUB_REPO = "MagisterGudvin/nutricheck"
 GITHUB_BRANCH = "main"
 
 # Секреты задаются через:
