@@ -1,7 +1,7 @@
 title: NutriCheck
 description: Анализ питания студентов
 baseurl: "/nutricheck"
-url: "https://username.github.io"
+url: "https://MagisterGudvin.github.io"
 exclude:
   - worker/
   - tools/
