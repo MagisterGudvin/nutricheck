@@ -28,7 +28,9 @@ const Storage = (() => {
   const shas = {};
 
   function getWorkerUrl() {
-    return cache.config?.proxy_url || '';
+    let url = cache.config?.proxy_url || '';
+    if (url && !url.startsWith('http')) url = 'https://' + url;
+    return url.replace(/\/+$/, '');
   }
 
   // ===== Общие методы чтения/записи =====
