@@ -1,0 +1,106 @@
+name: Validate & Sync Data
+
+on:
+  push:
+    paths:
+      - 'data/users.json'
+      - 'data/reports.json'
+      - 'data/comments.json'
+      - 'data/config.json'
+      - 'data/products_override.json'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Validate JSON files
+        run: |
+          echo "=== Validating data files ==="
+          for file in data/users.json data/reports.json data/comments.json data/config.json data/products_override.json; do
+            if [ -f "$file" ]; then
+              python3 -m json.tool "$file" > /dev/null 2>&1
+              if [ $? -eq 0 ]; then
+                echo "✅ $file — valid JSON"
+              else
+                echo "❌ $file — INVALID JSON"
+                exit 1
+              fi
+            else
+              echo "⚠️  $file — not found, skipping"
+            fi
+          done
+
+      - name: Print data summary
+        run: |
+          echo "=== Data Summary ==="
+
+          if [ -f "data/users.json" ]; then
+            USERS=$(python3 -c "import json; d=json.load(open('data/users.json')); print(len(d))")
+            echo "👥 Users: $USERS"
+          fi
+
+          if [ -f "data/reports.json" ]; then
+            STUDENTS=$(python3 -c "import json; d=json.load(open('data/reports.json')); print(len(d))")
+            TOTAL=$(python3 -c "import json; d=json.load(open('data/reports.json')); print(sum(len(v) for v in d.values()))")
+            echo "📊 Students with reports: $STUDENTS"
+            echo "📋 Total reports: $TOTAL"
+          fi
+
+          if [ -f "data/comments.json" ]; then
+            COMMENTS=$(python3 -c "import json; d=json.load(open('data/comments.json')); print(len(d))")
+            echo "💬 Comments: $COMMENTS"
+          fi
+
+          if [ -f "data/products_override.json" ]; then
+            OVERRIDE=$(python3 -c "import json; d=json.load(open('data/products_override.json')); print('none' if d is None else len(d))")
+            echo "🍎 Products override: $OVERRIDE"
+          fi
+
+          if [ -f "data/config.json" ]; then
+            echo "⚙️  Config: $(cat data/config.json)"
+          fi
+
+      - name: Create backup branch
+        run: |
+          DATE=$(date +%Y%m%d-%H%M%S)
+          BRANCH="backup/data-${DATE}"
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git checkout -b "$BRANCH"
+          git push origin "$BRANCH"
+          echo "📦 Backup branch created: $BRANCH"
+
+  rebuild-pages:
+    needs: validate
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pages: write
+      id-token: write
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Pages
+        uses: actions/configure-pages@v5
+
+      - name: Build with Jekyll
+        uses: actions/jekyll-build-pages@v1
+        with:
+          source: ./
+          destination: ./_site
+
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: ./_site
+
+      - name: Deploy to GitHub Pages
+        uses: actions/deploy-pages@v4
