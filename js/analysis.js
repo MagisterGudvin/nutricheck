@@ -45,9 +45,9 @@ const Analysis = (() => {
   /**
    * Формирует сводку дня на основе данных анализа
    */
-  function getDaySummary(report) {
+  function getDaySummary(report, studentId) {
     if (!report || !report.totals) return null;
-    const norms = Database.getNorms();
+    const norms = studentId ? Database.getStudentNorms(studentId) : Database.getNorms();
     const t = report.totals;
 
     return {
@@ -61,8 +61,8 @@ const Analysis = (() => {
   /**
    * Общий статус дня
    */
-  function getOverallStatus(report) {
-    const summary = getDaySummary(report);
+  function getOverallStatus(report, studentId) {
+    const summary = getDaySummary(report, studentId);
     if (!summary) return 'unknown';
     const statuses = Object.values(summary).map(s => s.status);
     if (statuses.includes('danger')) return 'danger';

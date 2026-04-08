@@ -140,12 +140,12 @@ const UI = (() => {
         <a href="#week-diary" data-page="week-diary"><span class="nav-icon">&#128221;</span> Ввод за неделю</a>
         <a href="#report" data-page="report"><span class="nav-icon">&#128202;</span> Последний отчёт</a>
         <a href="#week" data-page="week"><span class="nav-icon">&#128197;</span> Сводка по дням</a>
+        <a href="#norms" data-page="norms"><span class="nav-icon">&#9878;</span> Мои нормы</a>
       `;
     } else if (Auth.isTeacher()) {
       nav.innerHTML = `
         <a href="#students" data-page="students"><span class="nav-icon">&#128101;</span> Студенты</a>
         <a href="#products" data-page="products"><span class="nav-icon">&#128218;</span> База продуктов</a>
-        <a href="#norms" data-page="norms"><span class="nav-icon">&#9878;</span> Нормы</a>
         <a href="#books" data-page="books"><span class="nav-icon">&#128214;</span> Книги</a>
         <a href="#export" data-page="export"><span class="nav-icon">&#128190;</span> Экспорт</a>
       `;
@@ -233,12 +233,12 @@ const UI = (() => {
         return;
       }
 
-      showLoading('Анализируем рацион с помощью ИИ...');
+      showLoading('Анализируем рацион...');
 
       try {
-        const result = await API.analyze(breakfast, lunch, dinner);
-        const date = $('#diary-date').value;
         const session = Auth.getSession();
+        const result = await API.analyze(breakfast, lunch, dinner, session.id);
+        const date = $('#diary-date').value;
 
         const report = {
           date,
@@ -343,7 +343,7 @@ const UI = (() => {
 
       try {
         const session = Auth.getSession();
-        const results = await API.analyzeWeek(days, (current, total, date) => {
+        const results = await API.analyzeWeek(days, session.id, (current, total, date) => {
           showLoading(`Анализ дня ${current} из ${total} (${date})...`);
         });
 
@@ -381,7 +381,7 @@ const UI = (() => {
     const session = Auth.getSession();
     const studentId = params?.studentId || session.id;
     const allReports = Database.getReports(studentId);
-    const norms = Database.getNorms();
+    const norms = Database.getStudentNorms(studentId);
 
     // Если указана стартовая дата — берём 7 дней от неё, иначе последние 7
     let weekReports;
@@ -601,8 +601,7 @@ const UI = (() => {
       return;
     }
 
-    const norms = Database.getNorms();
-    const comment = Database.getComment(studentId, report.date);
+    const norms = Database.getStudentNorms(studentId);
     const isTeacher = Auth.isTeacher();
     const student = Auth.getStudentById(studentId);
     const studentName = student ? student.name : session.name;
@@ -619,28 +618,32 @@ const UI = (() => {
       ${renderOmegaSection(report, norms)}
       ${renderDeficits(report)}
       ${renderImbalances(report)}
-      ${renderRecommendations(report)}
-      ${renderCommentSection(studentId, report.date, comment, isTeacher)}
+      ${renderRecommendations(report, isTeacher, studentId)}
 
-      ${isTeacher ? `<div style="margin-top:1rem;">
-        <button class="btn btn-secondary" id="btn-edit-report">&#9998; Редактировать отчёт</button>
+      ${isTeacher ? `<div class="action-buttons" style="margin-top:1rem;">
+        <button class="btn btn-outline" id="btn-doc-day">&#128196; Скачать .doc</button>
       </div>` : ''}
     `;
 
     if (isTeacher) {
-      const saveCommentBtn = $('#btn-save-comment');
-      if (saveCommentBtn) {
-        saveCommentBtn.onclick = async () => {
-          const text = $('#teacher-comment-input').value;
+      const saveRecBtn = $('#btn-save-recommendations');
+      if (saveRecBtn) {
+        saveRecBtn.onclick = async () => {
+          const text = $('#edit-recommendations').value;
+          const recommendations = text.split('\n').filter(l => l.trim());
           showLoading('Сохраняем...');
-          await Database.saveComment(studentId, report.date, text);
+          await Database.updateReport(studentId, report.date, { recommendations });
           hideLoading();
-          toast('Комментарий сохранён');
+          toast('Рекомендации сохранены');
+          renderReport(container, { studentId, date: report.date });
         };
       }
-      const editBtn = $('#btn-edit-report');
-      if (editBtn) {
-        editBtn.onclick = () => showEditReportModal(studentId, report);
+      const docDayBtn = $('#btn-doc-day');
+      if (docDayBtn) {
+        docDayBtn.onclick = () => {
+          DocxExport.exportDayReport(studentId, report.date);
+          toast('Отчёт скачан');
+        };
       }
     }
   }
@@ -659,7 +662,7 @@ const UI = (() => {
       rows += `<tr><td colspan="7" style="font-weight:700; background:var(--gray-light);">${name}</td></tr>`;
       for (const item of items) {
         const src = item.source || '';
-        const srcClass = src.includes('ИИ') ? 'src-ai' : (src.includes('Скурихин') ? 'src-book' : 'src-db');
+        const srcClass = src.includes('Оценка') ? 'src-ai' : (src.includes('Скурихин') ? 'src-book' : 'src-db');
         rows += `<tr>
           <td>${item.product}</td>
           <td>${item.portion_g || '-'}</td>
@@ -810,89 +813,28 @@ const UI = (() => {
     `;
   }
 
-  function renderRecommendations(report) {
-    if (!report.recommendations?.length) return '';
-    return `
-      <div class="report-section">
-        <h3>Рекомендации ИИ</h3>
-        <ul class="recommendation-list">${report.recommendations.map(r => `<li>${r}</li>`).join('')}</ul>
-      </div>
-    `;
-  }
-
-  function renderCommentSection(studentId, date, comment, isTeacher) {
+  function renderRecommendations(report, isTeacher, studentId) {
     if (isTeacher) {
       return `
         <div class="report-section">
-          <h3>Комментарий преподавателя</h3>
-          <textarea id="teacher-comment-input" rows="3" placeholder="Оставьте комментарий для студента...">${escHtml(comment)}</textarea>
+          <h3>Рекомендации</h3>
+          ${report.recommendations?.length ? `
+            <ul class="recommendation-list" id="rec-list">${report.recommendations.map(r => `<li>${escHtml(r)}</li>`).join('')}</ul>
+          ` : '<p style="color:var(--gray)">Нет рекомендаций</p>'}
+          <textarea id="edit-recommendations" rows="4" placeholder="Редактируйте рекомендации (по одной на строку)...">${(report.recommendations || []).join('\n')}</textarea>
           <div style="margin-top:0.5rem;">
-            <button class="btn btn-primary btn-sm" id="btn-save-comment">Сохранить комментарий</button>
+            <button class="btn btn-primary btn-sm" id="btn-save-recommendations" data-student="${studentId}" data-date="${report.date}">Сохранить рекомендации</button>
           </div>
         </div>
       `;
     }
-    if (comment) {
-      return `
-        <div class="report-section">
-          <div class="comment-box">
-            <div class="comment-label">Комментарий преподавателя</div>
-            <div>${escHtml(comment)}</div>
-          </div>
-        </div>
-      `;
-    }
-    return '';
-  }
-
-  // ===== Edit report modal (teacher) =====
-
-  function showEditReportModal(studentId, report) {
-    const t = report.totals || {};
-    const overlay = document.createElement('div');
-    overlay.className = 'modal-overlay';
-    overlay.innerHTML = `
-      <div class="modal">
-        <h3>Редактировать итоги — ${report.date}</h3>
-        <div class="form-row">
-          <div class="form-group"><label>Калории</label><input type="number" id="edit-calories" value="${t.calories || 0}"></div>
-          <div class="form-group"><label>Белки</label><input type="number" id="edit-protein" value="${t.protein || 0}" step="0.1"></div>
-        </div>
-        <div class="form-row">
-          <div class="form-group"><label>Жиры</label><input type="number" id="edit-fat" value="${t.fat || 0}" step="0.1"></div>
-          <div class="form-group"><label>Углеводы</label><input type="number" id="edit-carbs" value="${t.carbs || 0}" step="0.1"></div>
-        </div>
-        <div class="form-group">
-          <label>Рекомендации (по одной на строку)</label>
-          <textarea id="edit-recommendations" rows="4">${(report.recommendations || []).join('\n')}</textarea>
-        </div>
-        <div class="modal-actions">
-          <button class="btn btn-secondary" id="modal-cancel">Отмена</button>
-          <button class="btn btn-primary" id="modal-save">Сохранить</button>
-        </div>
+    if (!report.recommendations?.length) return '';
+    return `
+      <div class="report-section">
+        <h3>Рекомендации</h3>
+        <ul class="recommendation-list">${report.recommendations.map(r => `<li>${escHtml(r)}</li>`).join('')}</ul>
       </div>
     `;
-    document.body.appendChild(overlay);
-
-    overlay.querySelector('#modal-cancel').onclick = () => overlay.remove();
-    overlay.querySelector('#modal-save').onclick = async () => {
-      const updates = {
-        totals: {
-          ...report.totals,
-          calories: +overlay.querySelector('#edit-calories').value,
-          protein: +overlay.querySelector('#edit-protein').value,
-          fat: +overlay.querySelector('#edit-fat').value,
-          carbs: +overlay.querySelector('#edit-carbs').value,
-        },
-        recommendations: overlay.querySelector('#edit-recommendations').value.split('\n').filter(l => l.trim())
-      };
-      showLoading('Сохраняем...');
-      await Database.updateReport(studentId, report.date, updates);
-      hideLoading();
-      overlay.remove();
-      toast('Отчёт обновлён');
-      renderPage('report', { studentId, date: report.date });
-    };
   }
 
   // ===== Week summary (student) =====
@@ -940,7 +882,6 @@ const UI = (() => {
           ${allDays.map(report => {
             const status = Analysis.getOverallStatus(report);
             const t = report.totals || {};
-            const comment = Database.getComment(session.id, report.date);
             return `
               <div class="day-card" data-date="${report.date}">
                 <div class="day-date">${report.date} <span class="badge badge-${status}">${statusLabel(status)}</span></div>
@@ -950,7 +891,6 @@ const UI = (() => {
                   <span>Жиры:</span><strong>${r(t.fat)} г</strong>
                   <span>Углеводы:</span><strong>${r(t.carbs)} г</strong>
                 </div>
-                ${comment ? `<div class="comment-box" style="margin-top:0.5rem;"><div class="comment-label">Преподаватель</div><div style="font-size:0.85rem;">${escHtml(comment)}</div></div>` : ''}
               </div>
             `;
           }).join('')}
@@ -1099,7 +1039,8 @@ const UI = (() => {
 
       <div class="action-buttons" style="margin-bottom:1rem;">
         <button class="btn btn-secondary" onclick="location.hash='#students'">&#8592; К списку</button>
-        <button class="btn btn-outline btn-csv-one" data-id="${studentId}" data-name="${escHtml(student.name)}">Скачать CSV</button>
+        <button class="btn btn-outline btn-csv-one" data-id="${studentId}" data-name="${escHtml(student.name)}">CSV</button>
+        <button class="btn btn-outline btn-week-doc" data-id="${studentId}" data-name="${escHtml(student.name)}">Недельный отчёт (.doc)</button>
       </div>
 
       ${reports.length === 0 ? `
@@ -1109,12 +1050,14 @@ const UI = (() => {
           ${reports.map(report => {
             const status = Analysis.getOverallStatus(report);
             const t = report.totals || {};
-            const comment = Database.getComment(studentId, report.date);
             return `
               <div class="day-card" data-date="${report.date}" data-student="${studentId}">
                 <div class="day-date">
                   ${report.date} <span class="badge badge-${status}">${statusLabel(status)}</span>
-                  <button class="btn btn-sm btn-danger btn-del-report" data-date="${report.date}" data-student="${studentId}" title="Удалить отчёт" style="float:right;">&times;</button>
+                  <span style="float:right;">
+                    <button class="btn btn-sm btn-outline btn-doc-report" data-date="${report.date}" data-student="${studentId}" title="Скачать .doc">&#128196;</button>
+                    <button class="btn btn-sm btn-danger btn-del-report" data-date="${report.date}" data-student="${studentId}" title="Удалить отчёт">&times;</button>
+                  </span>
                 </div>
                 <div class="day-stats">
                   <span>Калории:</span><strong>${r(t.calories)}</strong>
@@ -1122,7 +1065,6 @@ const UI = (() => {
                   <span>Жиры:</span><strong>${r(t.fat)} г</strong>
                   <span>Углеводы:</span><strong>${r(t.carbs)} г</strong>
                 </div>
-                ${comment ? `<div class="comment-box" style="margin-top:0.5rem;"><div class="comment-label">Ваш комментарий</div><div style="font-size:0.85rem;">${escHtml(comment)}</div></div>` : ''}
               </div>
             `;
           }).join('')}
@@ -1133,6 +1075,19 @@ const UI = (() => {
     container.querySelector('.btn-csv-one')?.addEventListener('click', () => {
       Reports.exportStudentCSV(studentId, student.name);
       toast('CSV скачан');
+    });
+
+    container.querySelector('.btn-week-doc')?.addEventListener('click', () => {
+      DocxExport.exportWeekReport(studentId);
+      toast('Недельный отчёт скачан');
+    });
+
+    $$('.btn-doc-report', container).forEach(btn => {
+      btn.onclick = (e) => {
+        e.stopPropagation();
+        DocxExport.exportDayReport(btn.dataset.student, btn.dataset.date);
+        toast('Отчёт скачан');
+      };
     });
 
     $$('.btn-del-report', container).forEach(btn => {
@@ -1462,13 +1417,14 @@ const UI = (() => {
   // ===== Norms (teacher) =====
 
   function renderNorms(container) {
-    const norms = Database.getNorms();
+    const session = Auth.getSession();
+    const norms = Database.getStudentNorms(session.id);
     const aa = norms.amino_acids || {};
 
     container.innerHTML = `
       <div class="page-header">
-        <h2>Суточные нормы</h2>
-        <p>Редактирование норм для анализа рациона</p>
+        <h2>Мои суточные нормы</h2>
+        <p>Индивидуальные нормы для анализа вашего рациона</p>
       </div>
 
       <div class="card">
@@ -1535,7 +1491,7 @@ const UI = (() => {
         omega_ratio_max: Number($('#norm-omega-ratio').value),
       };
       showLoading('Сохраняем нормы...');
-      await Database.saveNorms(updated);
+      await Database.saveStudentNorms(session.id, updated);
       hideLoading();
       toast('Нормы сохранены');
     };
@@ -1551,7 +1507,7 @@ const UI = (() => {
         omega3_min: 1.1, omega6_max: 17, omega_ratio_max: 4
       };
       showLoading('Сброс норм...');
-      await Database.saveNorms(defaults);
+      await Database.saveStudentNorms(session.id, defaults);
       hideLoading();
       toast('Нормы сброшены к значениям по умолчанию');
       renderNorms(container);

@@ -55,6 +55,9 @@ const App = (() => {
         case 'week':
           UI.renderPage('week');
           break;
+        case 'norms':
+          UI.renderPage('norms');
+          break;
         case 'settings':
           UI.renderPage('settings');
           break;
@@ -78,9 +81,6 @@ const App = (() => {
           break;
         case 'products':
           UI.renderPage('products');
-          break;
-        case 'norms':
-          UI.renderPage('norms');
           break;
         case 'books':
           UI.renderPage('books');

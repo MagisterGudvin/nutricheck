@@ -12,7 +12,7 @@ const Reports = (() => {
     'Калории', 'Белки', 'Жиры', 'Углеводы',
     ...AMINO_KEYS.map(k => Analysis.AMINO_NAMES[k]),
     'Омега-3', 'Омега-6',
-    'Источник', 'Статус', 'Комментарий преподавателя'
+    'Источник', 'Статус'
   ];
 
   const STATUS_LABELS = { ok: 'Норма', warn: 'Отклонение', danger: 'Дефицит', unknown: '—' };
@@ -22,12 +22,10 @@ const Reports = (() => {
    */
   function buildStudentRows(studentId) {
     const reports = Database.getReports(studentId);
-    const comments = Database.getAllComments();
     const rows = [];
 
     for (const report of reports) {
       const date = report.date;
-      const comment = comments[studentId + '_' + date] || '';
       const statusRaw = Analysis.getOverallStatus(report);
       const status = STATUS_LABELS[statusRaw] || statusRaw;
 
@@ -41,7 +39,7 @@ const Reports = (() => {
               item.calories, item.protein, item.fat, item.carbs,
               ...AMINO_KEYS.map(k => aa[k] || 0),
               item.omega3 || 0, item.omega6 || 0,
-              item.source || '', status, comment
+              item.source || '', status
             ]);
           }
         }
@@ -55,7 +53,7 @@ const Reports = (() => {
           t.calories, t.protein, t.fat, t.carbs,
           ...AMINO_KEYS.map(k => taa[k] || 0),
           t.omega3 || 0, t.omega6 || 0,
-          '', status, comment
+          '', status
         ]);
       }
     }

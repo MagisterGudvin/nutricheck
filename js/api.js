@@ -1,5 +1,5 @@
 /**
- * api.js — Запросы к Claude AI через Cloudflare Worker прокси
+ * api.js — Анализ рациона через Cloudflare Worker прокси
  */
 
 const API = (() => {
@@ -35,9 +35,9 @@ const API = (() => {
     return [...new Set(words)];
   }
 
-  async function analyze(breakfast, lunch, dinner) {
+  async function analyze(breakfast, lunch, dinner, studentId) {
     const products = Database.getProducts();
-    const norms = Database.getNorms();
+    const norms = studentId ? Database.getStudentNorms(studentId) : Database.getNorms();
 
     // Ищем в книге только по упомянутым продуктам (вместо передачи всей книги)
     const keywords = extractKeywords(breakfast, lunch, dinner);
@@ -84,7 +84,7 @@ const API = (() => {
 ИСТОЧНИКИ ДАННЫХ (по приоритету):
 1. Ручная база продуктов (если есть) — данные от преподавателя
 2. Фрагменты из справочника Скурихина «Химический состав российских продуктов питания» (2008)
-3. Только если продукта нет ни в базе, ни в книге — используй свои знания, но ОБЯЗАТЕЛЬНО отметь это в поле source: "оценка ИИ"
+3. Только если продукта нет ни в базе, ни в книге — используй свои знания, но ОБЯЗАТЕЛЬНО отметь это в поле source: "Оценка"
 
 ${productsSection}
 
@@ -104,7 +104,7 @@ ${JSON.stringify(norms, null, 2)}
 3. Для каждого продукта ОБЯЗАТЕЛЬНО укажи поле "source" — откуда взяты данные:
    - Если из ручной базы: "База продуктов"
    - Если из справочника: "Скурихин, табл. X" (укажи номер таблицы/главы, например "Скурихин, табл. 1" для молочных, "табл. 3" для мясных и т.д.)
-   - Если данных нет ни в базе, ни в книге: "Оценка ИИ"
+   - Если данных нет ни в базе, ни в книге: "Оценка"
 4. Просуммируй всё за день.
 5. Сравни с суточными нормами.
 
@@ -144,7 +144,7 @@ ${JSON.stringify(norms, null, 2)}
       if (match) {
         return JSON.parse(match[0]);
       }
-      throw new Error('Не удалось разобрать ответ ИИ: ' + cleaned.substring(0, 200));
+      throw new Error('Не удалось разобрать ответ: ' + cleaned.substring(0, 200));
     }
   }
 
@@ -153,12 +153,12 @@ ${JSON.stringify(norms, null, 2)}
    * days = [{ date, breakfast, lunch, dinner }, ...]
    * Анализируем каждый день отдельным запросом.
    */
-  async function analyzeWeek(days, onProgress) {
+  async function analyzeWeek(days, studentId, onProgress) {
     const results = [];
     for (let i = 0; i < days.length; i++) {
       const day = days[i];
       if (onProgress) onProgress(i + 1, days.length, day.date);
-      const result = await analyze(day.breakfast, day.lunch, day.dinner);
+      const result = await analyze(day.breakfast, day.lunch, day.dinner, studentId);
       results.push({ date: day.date, result });
     }
     return results;

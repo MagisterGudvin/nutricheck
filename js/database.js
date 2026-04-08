@@ -117,6 +117,19 @@ const Database = (() => {
     await Storage.saveNorms(newNorms);
   }
 
+  /** Получить нормы конкретного студента. Если нет — глобальные по умолчанию. */
+  function getStudentNorms(studentId) {
+    const all = Storage.getStudentNorms();
+    return all[studentId] || norms;
+  }
+
+  /** Сохранить индивидуальные нормы студента */
+  async function saveStudentNorms(studentId, studentNorms) {
+    const all = Storage.getStudentNorms();
+    all[studentId] = studentNorms;
+    await Storage.saveStudentNorms(all);
+  }
+
   function getBooksText() {
     return booksContent.map(b => `--- Файл: ${b.file} ---\n${b.text}`).join('\n\n');
   }
@@ -291,7 +304,7 @@ const Database = (() => {
   return {
     init, getProducts, saveProducts, resetProducts, hasOverride,
     addProduct, updateProduct, deleteProduct,
-    getNorms, saveNorms, getBooksText, searchBooks,
+    getNorms, saveNorms, getStudentNorms, saveStudentNorms, getBooksText, searchBooks,
     getBooksIndex, uploadBook, deleteBook,
     getReports, getAllReports, saveReport, updateReport, deleteReport, deleteAllReports,
     getComment, saveComment, getAllComments

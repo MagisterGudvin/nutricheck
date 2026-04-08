@@ -23,6 +23,7 @@ const Storage = (() => {
     reports: null,
     comments: null,
     productsOverride: undefined, // undefined = не загружен, null = нет правок
+    studentNorms: null, // { studentId: { calories, protein, ... } }
   };
 
   const shas = {};
@@ -107,26 +108,30 @@ const Storage = (() => {
       cache.reports = {};
       cache.comments = {};
       cache.productsOverride = null;
+      cache.studentNorms = {};
       return;
     }
 
     try {
-      const [users, reports, comments, productsOverride] = await Promise.all([
+      const [users, reports, comments, productsOverride, studentNorms] = await Promise.all([
         readFile('users').catch(() => []),
         readFile('reports').catch(() => ({})),
         readFile('comments').catch(() => ({})),
         readFile('products_override').catch(() => null),
+        readFile('student_norms').catch(() => ({})),
       ]);
       cache.users = users || [];
       cache.reports = reports || {};
       cache.comments = comments || {};
       cache.productsOverride = productsOverride; // null = нет правок
+      cache.studentNorms = studentNorms || {};
     } catch (e) {
       console.warn('Storage init fallback to empty:', e.message);
       cache.users = [];
       cache.reports = {};
       cache.comments = {};
       cache.productsOverride = null;
+      cache.studentNorms = {};
     }
   }
 
@@ -179,10 +184,21 @@ const Storage = (() => {
     await writeFile('products_override', null, 'Reset products override');
   }
 
-  // ===== Norms =====
+  // ===== Norms (global, legacy) =====
 
   async function saveNorms(norms) {
     await writeFile('norms', norms, 'Update norms');
+  }
+
+  // ===== Student Norms (per-student) =====
+
+  function getStudentNorms() {
+    return cache.studentNorms || {};
+  }
+
+  async function saveStudentNorms(allNorms) {
+    cache.studentNorms = allNorms;
+    await writeFile('student_norms', allNorms, 'Update student norms');
   }
 
   // ===== Books =====
@@ -250,6 +266,7 @@ const Storage = (() => {
     getComments, saveComments,
     getProductsOverride, saveProductsOverride, resetProductsOverride,
     saveNorms,
+    getStudentNorms, saveStudentNorms,
     uploadBook, deleteBook, saveBooksIndex,
     isLoaded,
   };
