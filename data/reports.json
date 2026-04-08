@@ -1,6 +1,143 @@
 {
   "mnorzw8ude6k": [
     {
+      "date": "2026-04-10",
+      "input": {
+        "breakfast": "овсянка 200г",
+        "lunch": "Борщ 200 мл",
+        "dinner": "куриная грудка 200г"
+      },
+      "meals": {
+        "breakfast": [
+          {
+            "product": "овсянка",
+            "portion_g": 200,
+            "calories": 732,
+            "protein": 24.4,
+            "fat": 12.2,
+            "carbs": 118,
+            "amino_acids": {
+              "leucine": 1.6,
+              "isoleucine": 0.9,
+              "valine": 1.2,
+              "lysine": 0.8,
+              "methionine": 0.4,
+              "phenylalanine": 1.1,
+              "threonine": 0.7,
+              "tryptophan": 0.24,
+              "histidine": 0.5
+            },
+            "omega3": 0.2,
+            "omega6": 4.8,
+            "source": "Оценка ИИ"
+          }
+        ],
+        "lunch": [
+          {
+            "product": "борщ",
+            "portion_g": 200,
+            "calories": 64,
+            "protein": 1.6,
+            "fat": 2,
+            "carbs": 8.2,
+            "amino_acids": {
+              "leucine": 0.12,
+              "isoleucine": 0.06,
+              "valine": 0.08,
+              "lysine": 0.08,
+              "methionine": 0.02,
+              "phenylalanine": 0.07,
+              "threonine": 0.05,
+              "tryptophan": 0.01,
+              "histidine": 0.04
+            },
+            "omega3": 0.02,
+            "omega6": 0.18,
+            "source": "Скурихин, табл. 8.1.5.19"
+          }
+        ],
+        "dinner": [
+          {
+            "product": "куриная грудка",
+            "portion_g": 200,
+            "calories": 230,
+            "protein": 46,
+            "fat": 4,
+            "carbs": 0,
+            "amino_acids": {
+              "leucine": 3.8,
+              "isoleucine": 2.1,
+              "valine": 2.3,
+              "lysine": 4.2,
+              "methionine": 1.4,
+              "phenylalanine": 1.9,
+              "threonine": 2,
+              "tryptophan": 0.56,
+              "histidine": 1.5
+            },
+            "omega3": 0.1,
+            "omega6": 0.9,
+            "source": "Оценка ИИ"
+          }
+        ]
+      },
+      "totals": {
+        "calories": 1026,
+        "protein": 72,
+        "fat": 18.2,
+        "carbs": 126.2,
+        "amino_acids": {
+          "leucine": 5.52,
+          "isoleucine": 3.06,
+          "valine": 3.58,
+          "lysine": 5.08,
+          "methionine": 1.82,
+          "phenylalanine": 3.07,
+          "threonine": 2.75,
+          "tryptophan": 0.81,
+          "histidine": 2.04
+        },
+        "omega3": 0.32,
+        "omega6": 5.88
+      },
+      "norms": {
+        "calories": 2500,
+        "protein": 80,
+        "fat": 70,
+        "carbs": 350,
+        "amino_acids": {
+          "leucine": 2.7,
+          "isoleucine": 1.4,
+          "valine": 1.8,
+          "lysine": 2.1,
+          "methionine": 0.7,
+          "phenylalanine": 1.6,
+          "threonine": 1,
+          "tryptophan": 0.28,
+          "histidine": 0.7
+        },
+        "omega3_min": 1.1,
+        "omega6_max": 17
+      },
+      "deficits": [
+        "Калории: дефицит 1474 ккал (59% от нормы)",
+        "Жиры: дефицит 51.8 г (74% от нормы)",
+        "Углеводы: дефицит 223.8 г (64% от нормы)",
+        "Омега-3: дефицит 0.78 г (71% от минимума)"
+      ],
+      "imbalances": [
+        "Соотношение Омега-6/Омега-3 составляет 18.4:1, что превышает оптимальное 4:1"
+      ],
+      "recommendations": [
+        "Увеличить общую калорийность рациона минимум в 2 раза",
+        "Добавить полезные жиры: орехи, семена, авокадо, растительные масла",
+        "Включить сложные углеводы: крупы, хлеб, овощи",
+        "Добавить источники Омега-3: жирную рыбу, льняное масло, грецкие орехи",
+        "Добавить второй завтрак и полдник для достижения нормы калорий"
+      ],
+      "createdAt": "2026-04-08T06:06:24.291Z"
+    },
+    {
       "date": "2026-04-09",
       "input": {
         "breakfast": "овсянка 200г",
