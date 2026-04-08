@@ -3,183 +3,102 @@
     {
       "date": "2026-04-07",
       "input": {
-        "breakfast": "овсянка 200г, банан, чай",
-        "lunch": "Борщ 300мл, хлеб 50г",
-        "dinner": "Куриная грудка 200г, рис 200г"
+        "breakfast": "овсянка 200г",
+        "lunch": "борщ 200 мл",
+        "dinner": "куриная грудка 200г"
       },
       "meals": {
         "breakfast": [
           {
             "product": "овсянка",
             "portion_g": 200,
-            "calories": 0,
-            "protein": 0,
-            "fat": 0,
-            "carbs": 0,
+            "calories": 732,
+            "protein": 24,
+            "fat": 12.6,
+            "carbs": 118,
             "amino_acids": {
-              "leucine": 0,
-              "isoleucine": 0,
-              "valine": 0,
-              "lysine": 0,
-              "methionine": 0,
-              "phenylalanine": 0,
-              "threonine": 0,
-              "tryptophan": 0,
-              "histidine": 0
+              "leucine": 1.8,
+              "isoleucine": 0.9,
+              "valine": 1.2,
+              "lysine": 0.8,
+              "methionine": 0.4,
+              "phenylalanine": 1.1,
+              "threonine": 0.7,
+              "tryptophan": 0.2,
+              "histidine": 0.5
             },
-            "omega3": 0,
-            "omega6": 0
-          },
-          {
-            "product": "банан",
-            "portion_g": 120,
-            "calories": 0,
-            "protein": 0,
-            "fat": 0,
-            "carbs": 0,
-            "amino_acids": {
-              "leucine": 0,
-              "isoleucine": 0,
-              "valine": 0,
-              "lysine": 0,
-              "methionine": 0,
-              "phenylalanine": 0,
-              "threonine": 0,
-              "tryptophan": 0,
-              "histidine": 0
-            },
-            "omega3": 0,
-            "omega6": 0
-          },
-          {
-            "product": "чай",
-            "portion_g": 250,
-            "calories": 0,
-            "protein": 0,
-            "fat": 0,
-            "carbs": 0,
-            "amino_acids": {
-              "leucine": 0,
-              "isoleucine": 0,
-              "valine": 0,
-              "lysine": 0,
-              "methionine": 0,
-              "phenylalanine": 0,
-              "threonine": 0,
-              "tryptophan": 0,
-              "histidine": 0
-            },
-            "omega3": 0,
-            "omega6": 0
+            "omega3": 0.2,
+            "omega6": 2.4,
+            "source": "Оценка ИИ"
           }
         ],
         "lunch": [
           {
             "product": "борщ",
-            "portion_g": 300,
-            "calories": 0,
-            "protein": 0,
-            "fat": 0,
-            "carbs": 0,
+            "portion_g": 200,
+            "calories": 60,
+            "protein": 1.6,
+            "fat": 2,
+            "carbs": 8.2,
             "amino_acids": {
-              "leucine": 0,
-              "isoleucine": 0,
-              "valine": 0,
-              "lysine": 0,
-              "methionine": 0,
-              "phenylalanine": 0,
-              "threonine": 0,
-              "tryptophan": 0,
-              "histidine": 0
+              "leucine": 0.1,
+              "isoleucine": 0.05,
+              "valine": 0.08,
+              "lysine": 0.06,
+              "methionine": 0.02,
+              "phenylalanine": 0.05,
+              "threonine": 0.04,
+              "tryptophan": 0.01,
+              "histidine": 0.03
             },
-            "omega3": 0,
-            "omega6": 0
-          },
-          {
-            "product": "хлеб",
-            "portion_g": 50,
-            "calories": 0,
-            "protein": 0,
-            "fat": 0,
-            "carbs": 0,
-            "amino_acids": {
-              "leucine": 0,
-              "isoleucine": 0,
-              "valine": 0,
-              "lysine": 0,
-              "methionine": 0,
-              "phenylalanine": 0,
-              "threonine": 0,
-              "tryptophan": 0,
-              "histidine": 0
-            },
-            "omega3": 0,
-            "omega6": 0
+            "omega3": 0.02,
+            "omega6": 0.2,
+            "source": "Скурихин, табл. 8.1.5.19"
           }
         ],
         "dinner": [
           {
             "product": "куриная грудка",
             "portion_g": 200,
-            "calories": 0,
-            "protein": 0,
-            "fat": 0,
+            "calories": 230,
+            "protein": 46,
+            "fat": 3.6,
             "carbs": 0,
             "amino_acids": {
-              "leucine": 0,
-              "isoleucine": 0,
-              "valine": 0,
-              "lysine": 0,
-              "methionine": 0,
-              "phenylalanine": 0,
-              "threonine": 0,
-              "tryptophan": 0,
-              "histidine": 0
+              "leucine": 3.8,
+              "isoleucine": 2.2,
+              "valine": 2.4,
+              "lysine": 4.2,
+              "methionine": 1.4,
+              "phenylalanine": 1.8,
+              "threonine": 2,
+              "tryptophan": 0.56,
+              "histidine": 1.4
             },
-            "omega3": 0,
-            "omega6": 0
-          },
-          {
-            "product": "рис",
-            "portion_g": 200,
-            "calories": 0,
-            "protein": 0,
-            "fat": 0,
-            "carbs": 0,
-            "amino_acids": {
-              "leucine": 0,
-              "isoleucine": 0,
-              "valine": 0,
-              "lysine": 0,
-              "methionine": 0,
-              "phenylalanine": 0,
-              "threonine": 0,
-              "tryptophan": 0,
-              "histidine": 0
-            },
-            "omega3": 0,
-            "omega6": 0
+            "omega3": 0.1,
+            "omega6": 0.8,
+            "source": "Оценка ИИ"
           }
         ]
       },
       "totals": {
-        "calories": 0,
-        "protein": 0,
-        "fat": 0,
-        "carbs": 0,
+        "calories": 1022,
+        "protein": 71.6,
+        "fat": 18.2,
+        "carbs": 126.2,
         "amino_acids": {
-          "leucine": 0,
-          "isoleucine": 0,
-          "valine": 0,
-          "lysine": 0,
-          "methionine": 0,
-          "phenylalanine": 0,
-          "threonine": 0,
-          "tryptophan": 0,
-          "histidine": 0
+          "leucine": 5.7,
+          "isoleucine": 3.15,
+          "valine": 3.68,
+          "lysine": 5.06,
+          "methionine": 1.82,
+          "phenylalanine": 2.95,
+          "threonine": 2.74,
+          "tryptophan": 0.77,
+          "histidine": 1.93
         },
-        "omega3": 0,
-        "omega6": 0
+        "omega3": 0.32,
+        "omega6": 3.4
       },
       "norms": {
         "calories": 2500,
@@ -201,15 +120,24 @@
         "omega6_max": 17
       },
       "deficits": [
-        "Нет данных о составе продуктов в предоставленной базе для анализа"
+        "Критический дефицит калорий: 1022 ккал из 2500 (59% недобор)",
+        "Дефицит жиров: 18.2г из 70г (74% недобор)",
+        "Дефицит углеводов: 126.2г из 350г (64% недобор)",
+        "Дефицит Омега-3: 0.32г из 1.1г (71% недобор)"
       ],
       "imbalances": [
-        "Невозможно определить дисбалансы без данных о составе продуктов"
+        "Очень низкое соотношение Омега-6/Омега-3: 10.6 (норма до 4)",
+        "Несбалансированное распределение макронутриентов по приемам пищи"
       ],
       "recommendations": [
-        "Необходимо пополнить базу данных о составе продуктов для проведения анализа"
+        "Добавить полноценный второй завтрак и полдник",
+        "Увеличить порцию борща до 400-500мл",
+        "Добавить гарнир к куриной грудке (рис, гречка, овощи)",
+        "Включить источники полезных жиров (орехи, авокадо, жирная рыба)",
+        "Добавить овощной салат с растительным маслом",
+        "Включить фрукты и молочные продукты"
       ],
-      "createdAt": "2026-04-07T15:31:26.894Z"
+      "createdAt": "2026-04-08T05:44:50.972Z"
     }
   ]
 }
