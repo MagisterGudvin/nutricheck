@@ -1,6 +1,145 @@
 {
   "mnorzw8ude6k": [
     {
+      "date": "2026-04-08",
+      "input": {
+        "breakfast": "овсянка 200г",
+        "lunch": "Борщ 200 мл",
+        "dinner": "куриная грудка 200г"
+      },
+      "meals": {
+        "breakfast": [
+          {
+            "product": "овсянка",
+            "portion_g": 200,
+            "calories": 732,
+            "protein": 24.4,
+            "fat": 12.2,
+            "carbs": 118.6,
+            "amino_acids": {
+              "leucine": 1.9,
+              "isoleucine": 0.9,
+              "valine": 1.2,
+              "lysine": 0.8,
+              "methionine": 0.4,
+              "phenylalanine": 1.1,
+              "threonine": 0.7,
+              "tryptophan": 0.3,
+              "histidine": 0.5
+            },
+            "omega3": 0.2,
+            "omega6": 4.8,
+            "source": "Оценка ИИ"
+          }
+        ],
+        "lunch": [
+          {
+            "product": "борщ",
+            "portion_g": 200,
+            "calories": 16,
+            "protein": 1.6,
+            "fat": 2,
+            "carbs": 8.2,
+            "amino_acids": {
+              "leucine": 0.1,
+              "isoleucine": 0.05,
+              "valine": 0.08,
+              "lysine": 0.06,
+              "methionine": 0.02,
+              "phenylalanine": 0.07,
+              "threonine": 0.04,
+              "tryptophan": 0.01,
+              "histidine": 0.03
+            },
+            "omega3": 0.02,
+            "omega6": 0.3,
+            "source": "Скурихин, табл. 8.1.5.19"
+          }
+        ],
+        "dinner": [
+          {
+            "product": "куриная грудка",
+            "portion_g": 200,
+            "calories": 230,
+            "protein": 43.6,
+            "fat": 3.8,
+            "carbs": 0,
+            "amino_acids": {
+              "leucine": 3.8,
+              "isoleucine": 2.1,
+              "valine": 2.2,
+              "lysine": 4.2,
+              "methionine": 1.4,
+              "phenylalanine": 2,
+              "threonine": 2,
+              "tryptophan": 0.6,
+              "histidine": 1.5
+            },
+            "omega3": 0.08,
+            "omega6": 0.8,
+            "source": "Оценка ИИ"
+          }
+        ]
+      },
+      "totals": {
+        "calories": 978,
+        "protein": 69.6,
+        "fat": 18,
+        "carbs": 126.8,
+        "amino_acids": {
+          "leucine": 5.8,
+          "isoleucine": 3.05,
+          "valine": 3.48,
+          "lysine": 5.06,
+          "methionine": 1.82,
+          "phenylalanine": 3.17,
+          "threonine": 2.74,
+          "tryptophan": 0.91,
+          "histidine": 2.03
+        },
+        "omega3": 0.3,
+        "omega6": 5.9
+      },
+      "norms": {
+        "calories": 2500,
+        "protein": 80,
+        "fat": 70,
+        "carbs": 350,
+        "amino_acids": {
+          "leucine": 2.7,
+          "isoleucine": 1.4,
+          "valine": 1.8,
+          "lysine": 2.1,
+          "methionine": 0.7,
+          "phenylalanine": 1.6,
+          "threonine": 1,
+          "tryptophan": 0.28,
+          "histidine": 0.7
+        },
+        "omega3_min": 1.1,
+        "omega6_max": 17
+      },
+      "deficits": [
+        "Критический дефицит калорий - 978 ккал при норме 2500 (дефицит 61%)",
+        "Дефицит белка - 69.6г при норме 80г (дефицит 13%)",
+        "Критический дефицит жиров - 18г при норме 70г (дефицит 74%)",
+        "Критический дефицит углеводов - 127г при норме 350г (дефицит 64%)",
+        "Дефицит Омега-3 - 0.3г при норме минимум 1.1г (дефицит 73%)"
+      ],
+      "imbalances": [
+        "Омега-6/Омега-3 соотношение в норме - 19.7:1 при максимуме 4:1 - требует коррекции"
+      ],
+      "recommendations": [
+        "Увеличить общую калорийность рациона в 2.5 раза",
+        "Добавить источники полезных жиров: орехи, авокадо, жирную рыбу, растительные масла",
+        "Увеличить количество сложных углеводов: крупы, цельнозерновой хлеб, овощи",
+        "Добавить жирную морскую рыбу для Омега-3",
+        "Включить больше овощей в борщ или добавить овощной салат",
+        "Добавить перекусы между основными приемами пищи"
+      ],
+      "createdAt": "2026-04-08T06:06:22.486Z"
+    },
+    {
       "date": "2026-04-07",
       "input": {
         "breakfast": "овсянка 200г",
