@@ -15,6 +15,8 @@ const Reports = (() => {
     'Источник', 'Статус', 'Комментарий преподавателя'
   ];
 
+  const STATUS_LABELS = { ok: 'Норма', warn: 'Отклонение', danger: 'Дефицит', unknown: '—' };
+
   /**
    * Собирает строки отчёта для одного студента
    */
@@ -26,7 +28,8 @@ const Reports = (() => {
     for (const report of reports) {
       const date = report.date;
       const comment = comments[studentId + '_' + date] || '';
-      const status = Analysis.getOverallStatus(report);
+      const statusRaw = Analysis.getOverallStatus(report);
+      const status = STATUS_LABELS[statusRaw] || statusRaw;
 
       if (report.meals) {
         for (const [mealKey, mealName] of [['breakfast', 'Завтрак'], ['lunch', 'Обед'], ['dinner', 'Ужин']]) {
@@ -86,7 +89,7 @@ const Reports = (() => {
       sheets.push({ name: 'Нет данных', rows: [HEADERS] });
     }
 
-    downloadXLSX(sheets, `отчёт_все_студенты_${new Date().toISOString().slice(0,10)}.xlsx`);
+    downloadXLSX(sheets, `отчёт_все_студенты_${new Date().toISOString().slice(0,10)}.xls`);
   }
 
   // ===== CSV =====
@@ -164,7 +167,8 @@ const Reports = (() => {
 
     xml += '</Workbook>';
 
-    const blob = new Blob([xml], { type: 'application/vnd.ms-excel;charset=utf-8;' });
+    const bom = '\uFEFF';
+    const blob = new Blob([bom + xml], { type: 'application/vnd.ms-excel' });
     downloadBlob(blob, filename);
   }
 
