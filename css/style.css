@@ -856,10 +856,6 @@ tbody tr:hover {
     padding-top: 4.5rem;
   }
 
-  .page-header {
-    padding-left: 3rem;
-  }
-
   .page-header h2 {
     font-size: 1.3rem;
   }
@@ -889,7 +885,7 @@ tbody tr:hover {
 
   /* Tables: horizontal scroll inside table-wrap, not whole page */
   .table-wrap {
-    margin: 0 -1rem;
+    margin: 0;
     padding: 0;
     overflow-x: auto;
     -webkit-overflow-scrolling: touch;
@@ -1001,9 +997,13 @@ tbody tr:hover {
 @media (max-width: 480px) {
   html { font-size: 14px; }
 
+  .sidebar-header {
+    padding-left: 5.5rem;
+  }
+
   .main-content {
     padding: 0.75rem;
-    padding-top: 3.5rem;
+    padding-top: 5rem;
   }
 
   .page-header h2 {
