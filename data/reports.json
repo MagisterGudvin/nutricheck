@@ -1,104 +1,185 @@
 {
   "mnorzw8ude6k": [
     {
-      "date": "2026-04-12",
+      "date": "2026-04-07",
       "input": {
-        "breakfast": "овсянка 200г",
-        "lunch": "Борщ 200 мл",
-        "dinner": "куриная грудка 200г"
+        "breakfast": "овсянка 200г, банан, чай",
+        "lunch": "Борщ 300мл, хлеб 50г",
+        "dinner": "Куриная грудка 200г, рис 200г"
       },
       "meals": {
         "breakfast": [
           {
             "product": "овсянка",
             "portion_g": 200,
-            "calories": 732,
-            "protein": 24.8,
-            "fat": 12.6,
-            "carbs": 122.6,
+            "calories": 0,
+            "protein": 0,
+            "fat": 0,
+            "carbs": 0,
             "amino_acids": {
-              "leucine": 1.8,
-              "isoleucine": 0.9,
-              "valine": 1.2,
-              "lysine": 0.8,
-              "methionine": 0.4,
-              "phenylalanine": 1,
-              "threonine": 0.8,
-              "tryptophan": 0.3,
-              "histidine": 0.5
+              "leucine": 0,
+              "isoleucine": 0,
+              "valine": 0,
+              "lysine": 0,
+              "methionine": 0,
+              "phenylalanine": 0,
+              "threonine": 0,
+              "tryptophan": 0,
+              "histidine": 0
             },
-            "omega3": 0.2,
-            "omega6": 4.8,
-            "source": "Оценка ИИ"
+            "omega3": 0,
+            "omega6": 0
+          },
+          {
+            "product": "банан",
+            "portion_g": 120,
+            "calories": 0,
+            "protein": 0,
+            "fat": 0,
+            "carbs": 0,
+            "amino_acids": {
+              "leucine": 0,
+              "isoleucine": 0,
+              "valine": 0,
+              "lysine": 0,
+              "methionine": 0,
+              "phenylalanine": 0,
+              "threonine": 0,
+              "tryptophan": 0,
+              "histidine": 0
+            },
+            "omega3": 0,
+            "omega6": 0
+          },
+          {
+            "product": "чай",
+            "portion_g": 250,
+            "calories": 0,
+            "protein": 0,
+            "fat": 0,
+            "carbs": 0,
+            "amino_acids": {
+              "leucine": 0,
+              "isoleucine": 0,
+              "valine": 0,
+              "lysine": 0,
+              "methionine": 0,
+              "phenylalanine": 0,
+              "threonine": 0,
+              "tryptophan": 0,
+              "histidine": 0
+            },
+            "omega3": 0,
+            "omega6": 0
           }
         ],
         "lunch": [
           {
             "product": "борщ",
-            "portion_g": 200,
-            "calories": 30,
-            "protein": 1.6,
-            "fat": 2,
-            "carbs": 8.2,
+            "portion_g": 300,
+            "calories": 0,
+            "protein": 0,
+            "fat": 0,
+            "carbs": 0,
             "amino_acids": {
-              "leucine": 0.12,
-              "isoleucine": 0.06,
-              "valine": 0.08,
-              "lysine": 0.08,
-              "methionine": 0.02,
-              "phenylalanine": 0.06,
-              "threonine": 0.06,
-              "tryptophan": 0.02,
-              "histidine": 0.04
+              "leucine": 0,
+              "isoleucine": 0,
+              "valine": 0,
+              "lysine": 0,
+              "methionine": 0,
+              "phenylalanine": 0,
+              "threonine": 0,
+              "tryptophan": 0,
+              "histidine": 0
             },
-            "omega3": 0.02,
-            "omega6": 0.18,
-            "source": "Скурихин, табл. 8.1.5.19"
+            "omega3": 0,
+            "omega6": 0
+          },
+          {
+            "product": "хлеб",
+            "portion_g": 50,
+            "calories": 0,
+            "protein": 0,
+            "fat": 0,
+            "carbs": 0,
+            "amino_acids": {
+              "leucine": 0,
+              "isoleucine": 0,
+              "valine": 0,
+              "lysine": 0,
+              "methionine": 0,
+              "phenylalanine": 0,
+              "threonine": 0,
+              "tryptophan": 0,
+              "histidine": 0
+            },
+            "omega3": 0,
+            "omega6": 0
           }
         ],
         "dinner": [
           {
             "product": "куриная грудка",
             "portion_g": 200,
-            "calories": 462,
-            "protein": 62,
-            "fat": 3.6,
+            "calories": 0,
+            "protein": 0,
+            "fat": 0,
             "carbs": 0,
             "amino_acids": {
-              "leucine": 5.4,
-              "isoleucine": 2.8,
-              "valine": 3.2,
-              "lysine": 5.8,
-              "methionine": 1.8,
-              "phenylalanine": 2.6,
-              "threonine": 2.8,
-              "tryptophan": 0.8,
-              "histidine": 2.2
+              "leucine": 0,
+              "isoleucine": 0,
+              "valine": 0,
+              "lysine": 0,
+              "methionine": 0,
+              "phenylalanine": 0,
+              "threonine": 0,
+              "tryptophan": 0,
+              "histidine": 0
             },
-            "omega3": 0.1,
-            "omega6": 0.8,
-            "source": "Оценка ИИ"
+            "omega3": 0,
+            "omega6": 0
+          },
+          {
+            "product": "рис",
+            "portion_g": 200,
+            "calories": 0,
+            "protein": 0,
+            "fat": 0,
+            "carbs": 0,
+            "amino_acids": {
+              "leucine": 0,
+              "isoleucine": 0,
+              "valine": 0,
+              "lysine": 0,
+              "methionine": 0,
+              "phenylalanine": 0,
+              "threonine": 0,
+              "tryptophan": 0,
+              "histidine": 0
+            },
+            "omega3": 0,
+            "omega6": 0
           }
         ]
       },
       "totals": {
-        "calories": 1224,
-        "protein": 88.4,
-        "fat": 18.2,
-        "carbs": 130.8,
+        "calories": 0,
+        "protein": 0,
+        "fat": 0,
+        "carbs": 0,
         "amino_acids": {
-          "leucine": 7.32,
-          "isoleucine": 3.76,
-          "valine": 4.48,
-          "lysine": 6.68,
-          "methionine": 2.22,
-          "phenylalanine": 3.66,
-          "threonine": 3.66,
-          "tryptophan": 1.12,
-          "histidine": 2.74
+          "leucine": 0,
+          "isoleucine": 0,
+          "valine": 0,
+          "lysine": 0,
+          "methionine": 0,
+          "phenylalanine": 0,
+          "threonine": 0,
+          "tryptophan": 0,
+          "histidine": 0
         },
-        "omega3": 0.32,
-        "omega6": 5.78
+        "omega3": 0,
+        "omega6": 0
       },
       "norms": {
         "calories": 2500,
@@ -120,813 +201,183 @@
         "omega6_max": 17
       },
       "deficits": [
-        "Критический дефицит калорий: 1276 ккал (51% от нормы)",
-        "Дефицит жиров: 51.8г (26% от нормы)",
-        "Дефицит углеводов: 219.2г (37% от нормы)",
-        "Дефицит Омега-3: 0.78г (29% от минимальной нормы)"
+        "Нет данных о составе продуктов в предоставленной базе для анализа"
       ],
       "imbalances": [
-        "Избыток белка: +8.4г (111% от нормы)",
-        "Крайне низкое содержание жиров может нарушить усвоение жирорастворимых витаминов"
+        "Невозможно определить дисбалансы без данных о составе продуктов"
       ],
       "recommendations": [
-        "Увеличить калорийность рациона минимум в 2 раза",
-        "Добавить источники полезных жиров: орехи, семена, растительные масла, рыба",
-        "Включить больше сложных углеводов: цельнозерновые, овощи, фрукты",
-        "Добавить источники Омега-3: жирную рыбу, льняное масло, грецкие орехи",
-        "Разнообразить рацион овощами и фруктами для получения витаминов и минералов"
+        "Необходимо пополнить базу данных о составе продуктов для проведения анализа"
       ],
-      "createdAt": "2026-04-08T06:06:26.480Z"
-    },
-    {
-      "date": "2026-04-11",
-      "input": {
-        "breakfast": "овсянка 200г",
-        "lunch": "Борщ 200 мл",
-        "dinner": "куриная грудка 200г"
-      },
-      "meals": {
-        "breakfast": [
-          {
-            "product": "Овсянка",
-            "portion_g": 200,
-            "calories": 732,
-            "protein": 24.4,
-            "fat": 12.4,
-            "carbs": 118.4,
-            "amino_acids": {
-              "leucine": 1.6,
-              "isoleucine": 0.8,
-              "valine": 1.2,
-              "lysine": 0.8,
-              "methionine": 0.4,
-              "phenylalanine": 1,
-              "threonine": 0.7,
-              "tryptophan": 0.24,
-              "histidine": 0.5
-            },
-            "omega3": 0.2,
-            "omega6": 4.8,
-            "source": "оценка ИИ"
-          }
-        ],
-        "lunch": [
-          {
-            "product": "Борщ",
-            "portion_g": 200,
-            "calories": 60,
-            "protein": 1.6,
-            "fat": 2,
-            "carbs": 8.2,
-            "amino_acids": {
-              "leucine": 0.12,
-              "isoleucine": 0.06,
-              "valine": 0.08,
-              "lysine": 0.08,
-              "methionine": 0.02,
-              "phenylalanine": 0.06,
-              "threonine": 0.05,
-              "tryptophan": 0.01,
-              "histidine": 0.03
-            },
-            "omega3": 0.02,
-            "omega6": 0.2,
-            "source": "Скурихин, табл. 8.1.5.19"
-          }
-        ],
-        "dinner": [
-          {
-            "product": "Куриная грудка",
-            "portion_g": 200,
-            "calories": 462,
-            "protein": 46.2,
-            "fat": 3.8,
-            "carbs": 0,
-            "amino_acids": {
-              "leucine": 3.7,
-              "isoleucine": 2.1,
-              "valine": 2.3,
-              "lysine": 4.2,
-              "methionine": 1.4,
-              "phenylalanine": 1.8,
-              "threonine": 2,
-              "tryptophan": 0.54,
-              "histidine": 1.5
-            },
-            "omega3": 0.15,
-            "omega6": 0.8,
-            "source": "оценка ИИ"
-          }
-        ]
-      },
-      "totals": {
-        "calories": 1254,
-        "protein": 72.2,
-        "fat": 18.2,
-        "carbs": 126.6,
-        "amino_acids": {
-          "leucine": 5.42,
-          "isoleucine": 2.96,
-          "valine": 3.58,
-          "lysine": 5.08,
-          "methionine": 1.82,
-          "phenylalanine": 2.86,
-          "threonine": 2.75,
-          "tryptophan": 0.79,
-          "histidine": 2.03
-        },
-        "omega3": 0.37,
-        "omega6": 5.8
-      },
-      "norms": {
-        "calories": 2500,
-        "protein": 80,
-        "fat": 70,
-        "carbs": 350,
-        "amino_acids": {
-          "leucine": 2.7,
-          "isoleucine": 1.4,
-          "valine": 1.8,
-          "lysine": 2.1,
-          "methionine": 0.7,
-          "phenylalanine": 1.6,
-          "threonine": 1,
-          "tryptophan": 0.28,
-          "histidine": 0.7
-        },
-        "omega3_min": 1.1,
-        "omega6_max": 17
-      },
-      "deficits": [
-        "Критический дефицит калорий: потребление составляет только 50% от нормы (1254 из 2500 ккал)",
-        "Недостаток жиров: потребление составляет только 26% от нормы (18.2 из 70 г)",
-        "Недостаток углеводов: потребление составляет только 36% от нормы (126.6 из 350 г)",
-        "Дефицит Омега-3 жирных кислот: потребление составляет только 34% от минимальной нормы (0.37 из 1.1 г)"
-      ],
-      "imbalances": [
-        "Крайне низкое общее потребление энергии может привести к замедлению метаболизма",
-        "Слишком низкое потребление жиров может нарушить усвоение жирорастворимых витаминов"
-      ],
-      "recommendations": [
-        "Увеличить калорийность рациона минимум в 2 раза - добавить орехи, масла, авокадо",
-        "Добавить источники полезных жиров: рыбу жирных сортов, льняное масло, грецкие орехи",
-        "Включить больше сложных углеводов: крупы, цельнозерновой хлеб, овощи",
-        "Добавить перекусы между основными приемами пищи",
-        "Рассмотреть добавление Омега-3 из рыбьего жира или льняного масла"
-      ],
-      "createdAt": "2026-04-08T06:06:25.283Z"
-    },
-    {
-      "date": "2026-04-10",
-      "input": {
-        "breakfast": "овсянка 200г",
-        "lunch": "Борщ 200 мл",
-        "dinner": "куриная грудка 200г"
-      },
-      "meals": {
-        "breakfast": [
-          {
-            "product": "овсянка",
-            "portion_g": 200,
-            "calories": 732,
-            "protein": 24.4,
-            "fat": 12.2,
-            "carbs": 118,
-            "amino_acids": {
-              "leucine": 1.6,
-              "isoleucine": 0.9,
-              "valine": 1.2,
-              "lysine": 0.8,
-              "methionine": 0.4,
-              "phenylalanine": 1.1,
-              "threonine": 0.7,
-              "tryptophan": 0.24,
-              "histidine": 0.5
-            },
-            "omega3": 0.2,
-            "omega6": 4.8,
-            "source": "Оценка ИИ"
-          }
-        ],
-        "lunch": [
-          {
-            "product": "борщ",
-            "portion_g": 200,
-            "calories": 64,
-            "protein": 1.6,
-            "fat": 2,
-            "carbs": 8.2,
-            "amino_acids": {
-              "leucine": 0.12,
-              "isoleucine": 0.06,
-              "valine": 0.08,
-              "lysine": 0.08,
-              "methionine": 0.02,
-              "phenylalanine": 0.07,
-              "threonine": 0.05,
-              "tryptophan": 0.01,
-              "histidine": 0.04
-            },
-            "omega3": 0.02,
-            "omega6": 0.18,
-            "source": "Скурихин, табл. 8.1.5.19"
-          }
-        ],
-        "dinner": [
-          {
-            "product": "куриная грудка",
-            "portion_g": 200,
-            "calories": 230,
-            "protein": 46,
-            "fat": 4,
-            "carbs": 0,
-            "amino_acids": {
-              "leucine": 3.8,
-              "isoleucine": 2.1,
-              "valine": 2.3,
-              "lysine": 4.2,
-              "methionine": 1.4,
-              "phenylalanine": 1.9,
-              "threonine": 2,
-              "tryptophan": 0.56,
-              "histidine": 1.5
-            },
-            "omega3": 0.1,
-            "omega6": 0.9,
-            "source": "Оценка ИИ"
-          }
-        ]
-      },
-      "totals": {
-        "calories": 1026,
-        "protein": 72,
-        "fat": 18.2,
-        "carbs": 126.2,
-        "amino_acids": {
-          "leucine": 5.52,
-          "isoleucine": 3.06,
-          "valine": 3.58,
-          "lysine": 5.08,
-          "methionine": 1.82,
-          "phenylalanine": 3.07,
-          "threonine": 2.75,
-          "tryptophan": 0.81,
-          "histidine": 2.04
-        },
-        "omega3": 0.32,
-        "omega6": 5.88
-      },
-      "norms": {
-        "calories": 2500,
-        "protein": 80,
-        "fat": 70,
-        "carbs": 350,
-        "amino_acids": {
-          "leucine": 2.7,
-          "isoleucine": 1.4,
-          "valine": 1.8,
-          "lysine": 2.1,
-          "methionine": 0.7,
-          "phenylalanine": 1.6,
-          "threonine": 1,
-          "tryptophan": 0.28,
-          "histidine": 0.7
-        },
-        "omega3_min": 1.1,
-        "omega6_max": 17
-      },
-      "deficits": [
-        "Калории: дефицит 1474 ккал (59% от нормы)",
-        "Жиры: дефицит 51.8 г (74% от нормы)",
-        "Углеводы: дефицит 223.8 г (64% от нормы)",
-        "Омега-3: дефицит 0.78 г (71% от минимума)"
-      ],
-      "imbalances": [
-        "Соотношение Омега-6/Омега-3 составляет 18.4:1, что превышает оптимальное 4:1"
-      ],
-      "recommendations": [
-        "Увеличить общую калорийность рациона минимум в 2 раза",
-        "Добавить полезные жиры: орехи, семена, авокадо, растительные масла",
-        "Включить сложные углеводы: крупы, хлеб, овощи",
-        "Добавить источники Омега-3: жирную рыбу, льняное масло, грецкие орехи",
-        "Добавить второй завтрак и полдник для достижения нормы калорий"
-      ],
-      "createdAt": "2026-04-08T06:06:24.291Z"
-    },
-    {
-      "date": "2026-04-09",
-      "input": {
-        "breakfast": "овсянка 200г",
-        "lunch": "Борщ 200 мл",
-        "dinner": "куриная грудка 200г"
-      },
-      "meals": {
-        "breakfast": [
-          {
-            "product": "овсянка",
-            "portion_g": 200,
-            "calories": 734,
-            "protein": 25.4,
-            "fat": 12.2,
-            "carbs": 118,
-            "amino_acids": {
-              "leucine": 1.8,
-              "isoleucine": 0.9,
-              "valine": 1.2,
-              "lysine": 0.8,
-              "methionine": 0.4,
-              "phenylalanine": 1.1,
-              "threonine": 0.7,
-              "tryptophan": 0.2,
-              "histidine": 0.5
-            },
-            "omega3": 0.2,
-            "omega6": 4.8,
-            "source": "Оценка ИИ"
-          }
-        ],
-        "lunch": [
-          {
-            "product": "Борщ",
-            "portion_g": 200,
-            "calories": 21,
-            "protein": 1.6,
-            "fat": 2,
-            "carbs": 8.2,
-            "amino_acids": {
-              "leucine": 0.1,
-              "isoleucine": 0.05,
-              "valine": 0.08,
-              "lysine": 0.06,
-              "methionine": 0.02,
-              "phenylalanine": 0.07,
-              "threonine": 0.05,
-              "tryptophan": 0.01,
-              "histidine": 0.03
-            },
-            "omega3": 0.02,
-            "omega6": 0.1,
-            "source": "Скурихин, табл. 8.1.5.19"
-          }
-        ],
-        "dinner": [
-          {
-            "product": "куриная грудка",
-            "portion_g": 200,
-            "calories": 462,
-            "protein": 62,
-            "fat": 4.8,
-            "carbs": 0,
-            "amino_acids": {
-              "leucine": 4.8,
-              "isoleucine": 2.9,
-              "valine": 3.1,
-              "lysine": 5.5,
-              "methionine": 1.8,
-              "phenylalanine": 2.4,
-              "threonine": 2.8,
-              "tryptophan": 0.7,
-              "histidine": 1.9
-            },
-            "omega3": 0.1,
-            "omega6": 0.8,
-            "source": "Оценка ИИ"
-          }
-        ]
-      },
-      "totals": {
-        "calories": 1217,
-        "protein": 89,
-        "fat": 18.8,
-        "carbs": 126.2,
-        "amino_acids": {
-          "leucine": 6.7,
-          "isoleucine": 3.85,
-          "valine": 4.28,
-          "lysine": 6.36,
-          "methionine": 2.22,
-          "phenylalanine": 3.57,
-          "threonine": 3.55,
-          "tryptophan": 0.91,
-          "histidine": 2.43
-        },
-        "omega3": 0.32,
-        "omega6": 5.7
-      },
-      "norms": {
-        "calories": 2500,
-        "protein": 80,
-        "fat": 70,
-        "carbs": 350,
-        "amino_acids": {
-          "leucine": 2.7,
-          "isoleucine": 1.4,
-          "valine": 1.8,
-          "lysine": 2.1,
-          "methionine": 0.7,
-          "phenylalanine": 1.6,
-          "threonine": 1,
-          "tryptophan": 0.28,
-          "histidine": 0.7
-        },
-        "omega3_min": 1.1,
-        "omega6_max": 17
-      },
-      "deficits": [
-        "Критический дефицит калорий: 1217 ккал при норме 2500 ккал (-51%)",
-        "Критический дефицит жиров: 18.8г при норме 70г (-73%)",
-        "Критический дефицит углеводов: 126г при норме 350г (-64%)",
-        "Дефицит Омега-3: 0.32г при минимуме 1.1г (-71%)"
-      ],
-      "imbalances": [
-        "Избыток белка: 89г при норме 80г (+11%)",
-        "Нарушено соотношение Омега-6/Омега-3: 17.8:1 (норма до 4:1)"
-      ],
-      "recommendations": [
-        "Увеличить калорийность рациона на 1280 ккал за счет полезных жиров и сложных углеводов",
-        "Добавить источники здоровых жиров: орехи, семена, растительные масла, авокадо",
-        "Включить жирную рыбу (лосось, скумбрия) 2-3 раза в неделю для Омега-3",
-        "Добавить гарниры: рис, гречка, макароны из твердых сортов пшеницы",
-        "Включить больше овощей и фруктов для витаминов и клетчатки"
-      ],
-      "createdAt": "2026-04-08T06:06:23.344Z"
-    },
+      "createdAt": "2026-04-07T15:31:26.894Z"
+    }
+  ],
+  "mnpn7rpcxwdg": [
     {
       "date": "2026-04-08",
       "input": {
-        "breakfast": "овсянка 200г",
-        "lunch": "Борщ 200 мл",
-        "dinner": "куриная грудка 200г"
+        "breakfast": "Рис вареный 150 г",
+        "lunch": "Морковь сырая 300г, минтай 75г, гороховое пюре 200г, тыквенные семечки 5 г",
+        "dinner": "Конфеты Приморские классические 150 г"
       },
       "meals": {
         "breakfast": [
           {
-            "product": "овсянка",
-            "portion_g": 200,
-            "calories": 732,
-            "protein": 24.4,
-            "fat": 12.2,
-            "carbs": 118.6,
+            "product": "Рис вареный",
+            "portion_g": 150,
+            "calories": 116,
+            "protein": 2.2,
+            "fat": 0.2,
+            "carbs": 25,
             "amino_acids": {
-              "leucine": 1.9,
-              "isoleucine": 0.9,
-              "valine": 1.2,
-              "lysine": 0.8,
-              "methionine": 0.4,
-              "phenylalanine": 1.1,
-              "threonine": 0.7,
-              "tryptophan": 0.3,
-              "histidine": 0.5
+              "leucine": 0.18,
+              "isoleucine": 0.09,
+              "valine": 0.13,
+              "lysine": 0.08,
+              "methionine": 0.05,
+              "phenylalanine": 0.12,
+              "threonine": 0.08,
+              "tryptophan": 0.02,
+              "histidine": 0.05
             },
-            "omega3": 0.2,
-            "omega6": 4.8,
-            "source": "Оценка ИИ"
+            "omega3": 0.01,
+            "omega6": 0.05,
+            "source": "Скурихин, табл. 6"
           }
         ],
         "lunch": [
           {
-            "product": "борщ",
-            "portion_g": 200,
-            "calories": 16,
-            "protein": 1.6,
-            "fat": 2,
-            "carbs": 8.2,
+            "product": "Морковь сырая",
+            "portion_g": 300,
+            "calories": 105,
+            "protein": 3.9,
+            "fat": 0.3,
+            "carbs": 20.7,
             "amino_acids": {
-              "leucine": 0.1,
-              "isoleucine": 0.05,
-              "valine": 0.08,
-              "lysine": 0.06,
-              "methionine": 0.02,
-              "phenylalanine": 0.07,
-              "threonine": 0.04,
-              "tryptophan": 0.01,
-              "histidine": 0.03
+              "leucine": 0.18,
+              "isoleucine": 0.12,
+              "valine": 0.15,
+              "lysine": 0.21,
+              "methionine": 0.03,
+              "phenylalanine": 0.12,
+              "threonine": 0.12,
+              "tryptophan": 0.03,
+              "histidine": 0.06
             },
-            "omega3": 0.02,
-            "omega6": 0.3,
-            "source": "Скурихин, табл. 8.1.5.19"
-          }
-        ],
-        "dinner": [
+            "omega3": 0.01,
+            "omega6": 0.12,
+            "source": "Скурихин, табл. 8"
+          },
           {
-            "product": "куриная грудка",
-            "portion_g": 200,
-            "calories": 230,
-            "protein": 43.6,
-            "fat": 3.8,
+            "product": "Минтай припущенный",
+            "portion_g": 75,
+            "calories": 60,
+            "protein": 12.2,
+            "fat": 0.8,
             "carbs": 0,
             "amino_acids": {
-              "leucine": 3.8,
-              "isoleucine": 2.1,
-              "valine": 2.2,
-              "lysine": 4.2,
-              "methionine": 1.4,
-              "phenylalanine": 2,
-              "threonine": 2,
-              "tryptophan": 0.6,
-              "histidine": 1.5
-            },
-            "omega3": 0.08,
-            "omega6": 0.8,
-            "source": "Оценка ИИ"
-          }
-        ]
-      },
-      "totals": {
-        "calories": 978,
-        "protein": 69.6,
-        "fat": 18,
-        "carbs": 126.8,
-        "amino_acids": {
-          "leucine": 5.8,
-          "isoleucine": 3.05,
-          "valine": 3.48,
-          "lysine": 5.06,
-          "methionine": 1.82,
-          "phenylalanine": 3.17,
-          "threonine": 2.74,
-          "tryptophan": 0.91,
-          "histidine": 2.03
-        },
-        "omega3": 0.3,
-        "omega6": 5.9
-      },
-      "norms": {
-        "calories": 2500,
-        "protein": 80,
-        "fat": 70,
-        "carbs": 350,
-        "amino_acids": {
-          "leucine": 2.7,
-          "isoleucine": 1.4,
-          "valine": 1.8,
-          "lysine": 2.1,
-          "methionine": 0.7,
-          "phenylalanine": 1.6,
-          "threonine": 1,
-          "tryptophan": 0.28,
-          "histidine": 0.7
-        },
-        "omega3_min": 1.1,
-        "omega6_max": 17
-      },
-      "deficits": [
-        "Критический дефицит калорий - 978 ккал при норме 2500 (дефицит 61%)",
-        "Дефицит белка - 69.6г при норме 80г (дефицит 13%)",
-        "Критический дефицит жиров - 18г при норме 70г (дефицит 74%)",
-        "Критический дефицит углеводов - 127г при норме 350г (дефицит 64%)",
-        "Дефицит Омега-3 - 0.3г при норме минимум 1.1г (дефицит 73%)"
-      ],
-      "imbalances": [
-        "Омега-6/Омега-3 соотношение в норме - 19.7:1 при максимуме 4:1 - требует коррекции"
-      ],
-      "recommendations": [
-        "Увеличить общую калорийность рациона в 2.5 раза",
-        "Добавить источники полезных жиров: орехи, авокадо, жирную рыбу, растительные масла",
-        "Увеличить количество сложных углеводов: крупы, цельнозерновой хлеб, овощи",
-        "Добавить жирную морскую рыбу для Омега-3",
-        "Включить больше овощей в борщ или добавить овощной салат",
-        "Добавить перекусы между основными приемами пищи"
-      ],
-      "createdAt": "2026-04-08T06:06:22.486Z"
-    },
-    {
-      "date": "2026-04-07",
-      "input": {
-        "breakfast": "овсянка 200г",
-        "lunch": "Борщ 200 мл",
-        "dinner": "куриная грудка 200г"
-      },
-      "meals": {
-        "breakfast": [
-          {
-            "product": "овсянка",
-            "portion_g": 200,
-            "calories": 732,
-            "protein": 24.4,
-            "fat": 12.2,
-            "carbs": 118.4,
-            "amino_acids": {
-              "leucine": 1.6,
-              "isoleucine": 0.8,
-              "valine": 1.2,
-              "lysine": 0.8,
-              "methionine": 0.4,
-              "phenylalanine": 1,
-              "threonine": 0.8,
-              "tryptophan": 0.2,
-              "histidine": 0.5
+              "leucine": 1.31,
+              "isoleucine": 0.73,
+              "valine": 0.85,
+              "lysine": 1.46,
+              "methionine": 0.49,
+              "phenylalanine": 0.61,
+              "threonine": 0.67,
+              "tryptophan": 0.18,
+              "histidine": 0.37
             },
             "omega3": 0.24,
-            "omega6": 4.8,
-            "source": "Оценка ИИ"
-          }
-        ],
-        "lunch": [
+            "omega6": 0.04,
+            "source": "Скурихин, табл. 4"
+          },
           {
-            "product": "Борщ по 1-110",
+            "product": "Гороховое пюре",
             "portion_g": 200,
-            "calories": 30,
-            "protein": 1.6,
-            "fat": 2,
-            "carbs": 8.2,
+            "calories": 200,
+            "protein": 12,
+            "fat": 0.8,
+            "carbs": 40,
             "amino_acids": {
-              "leucine": 0.08,
-              "isoleucine": 0.04,
-              "valine": 0.06,
-              "lysine": 0.05,
-              "methionine": 0.02,
-              "phenylalanine": 0.05,
-              "threonine": 0.04,
-              "tryptophan": 0.01,
-              "histidine": 0.03
+              "leucine": 0.84,
+              "isoleucine": 0.52,
+              "valine": 0.56,
+              "lysine": 0.84,
+              "methionine": 0.12,
+              "phenylalanine": 0.52,
+              "threonine": 0.44,
+              "tryptophan": 0.12,
+              "histidine": 0.28
             },
             "omega3": 0.02,
-            "omega6": 0.15,
-            "source": "Скурихин, табл. 8.1.5.19"
-          }
-        ],
-        "dinner": [
-          {
-            "product": "куриная грудка",
-            "portion_g": 200,
-            "calories": 220,
-            "protein": 46.4,
-            "fat": 3.8,
-            "carbs": 0,
-            "amino_acids": {
-              "leucine": 3.6,
-              "isoleucine": 2.1,
-              "valine": 2.2,
-              "lysine": 4.1,
-              "methionine": 1.3,
-              "phenylalanine": 1.8,
-              "threonine": 2,
-              "tryptophan": 0.5,
-              "histidine": 1.5
-            },
-            "omega3": 0.15,
-            "omega6": 0.8,
+            "omega6": 0.36,
             "source": "Оценка ИИ"
-          }
-        ]
-      },
-      "totals": {
-        "calories": 982,
-        "protein": 72.4,
-        "fat": 18,
-        "carbs": 126.6,
-        "amino_acids": {
-          "leucine": 5.28,
-          "isoleucine": 2.94,
-          "valine": 3.46,
-          "lysine": 4.95,
-          "methionine": 1.72,
-          "phenylalanine": 2.85,
-          "threonine": 2.84,
-          "tryptophan": 0.71,
-          "histidine": 2.03
-        },
-        "omega3": 0.41,
-        "omega6": 5.75
-      },
-      "norms": {
-        "calories": 2500,
-        "protein": 80,
-        "fat": 70,
-        "carbs": 350,
-        "amino_acids": {
-          "leucine": 2.7,
-          "isoleucine": 1.4,
-          "valine": 1.8,
-          "lysine": 2.1,
-          "methionine": 0.7,
-          "phenylalanine": 1.6,
-          "threonine": 1,
-          "tryptophan": 0.28,
-          "histidine": 0.7
-        },
-        "omega3_min": 1.1,
-        "omega6_max": 17
-      },
-      "deficits": [
-        "Критический дефицит калорий - всего 982 ккал при норме 2500 (дефицит 61%)",
-        "Дефицит жиров - 18г при норме 70г (дефицит 74%)",
-        "Дефицит углеводов - 127г при норме 350г (дефицит 64%)",
-        "Дефицит Омега-3 жирных кислот - 0.41г при норме 1.1г"
-      ],
-      "imbalances": [
-        "Соотношение Омега-6/Омега-3 составляет 14:1 - в пределах нормы, но высокое",
-        "Избыток незаменимых аминокислот относительно общего количества белка"
-      ],
-      "recommendations": [
-        "Увеличить общую калорийность рациона в 2.5 раза - добавить углеводы (крупы, хлеб, фрукты)",
-        "Добавить источники полезных жиров: орехи, семена, растительные масла, рыбу",
-        "Включить жирную рыбу 2-3 раза в неделю для получения Омега-3",
-        "Добавить овощи и фрукты для витаминов и клетчатки",
-        "Рассмотреть дополнительные приемы пищи - полдник и второй завтрак"
-      ],
-      "createdAt": "2026-04-08T06:06:21.008Z"
-    },
-    {
-      "date": "2026-04-06",
-      "input": {
-        "breakfast": "овсянка 200г",
-        "lunch": "Борщ 200 мл",
-        "dinner": "куриная грудка 200г"
-      },
-      "meals": {
-        "breakfast": [
+          },
           {
-            "product": "овсянка",
-            "portion_g": 200,
-            "calories": 732,
-            "protein": 24,
-            "fat": 12.6,
-            "carbs": 119,
+            "product": "Тыквенные семечки",
+            "portion_g": 5,
+            "calories": 28,
+            "protein": 1.5,
+            "fat": 2.4,
+            "carbs": 0.5,
             "amino_acids": {
-              "leucine": 1.38,
-              "isoleucine": 0.7,
-              "valine": 1,
-              "lysine": 0.76,
-              "methionine": 0.36,
-              "phenylalanine": 0.94,
-              "threonine": 0.6,
-              "tryptophan": 0.23,
-              "histidine": 0.42
-            },
-            "omega3": 0.22,
-            "omega6": 4.8,
-            "source": "Оценка ИИ"
-          }
-        ],
-        "lunch": [
-          {
-            "product": "борщ",
-            "portion_g": 200,
-            "calories": 18,
-            "protein": 1.6,
-            "fat": 2,
-            "carbs": 8.2,
-            "amino_acids": {
-              "leucine": 0.12,
-              "isoleucine": 0.06,
+              "leucine": 0.13,
+              "isoleucine": 0.07,
               "valine": 0.08,
-              "lysine": 0.09,
-              "methionine": 0.02,
-              "phenylalanine": 0.07,
+              "lysine": 0.06,
+              "methionine": 0.04,
+              "phenylalanine": 0.08,
               "threonine": 0.05,
-              "tryptophan": 0.01,
+              "tryptophan": 0.03,
               "histidine": 0.04
             },
-            "omega3": 0.02,
-            "omega6": 0.18,
-            "source": "Скурихин, табл. 8"
+            "omega3": 0.01,
+            "omega6": 1.2,
+            "source": "Оценка ИИ"
           }
         ],
         "dinner": [
           {
-            "product": "куриная грудка",
-            "portion_g": 200,
-            "calories": 230,
-            "protein": 46,
-            "fat": 3.6,
-            "carbs": 0,
+            "product": "Конфеты Приморские классические",
+            "portion_g": 150,
+            "calories": 750,
+            "protein": 6,
+            "fat": 18,
+            "carbs": 135,
             "amino_acids": {
-              "leucine": 3.6,
-              "isoleucine": 2.1,
-              "valine": 2.4,
-              "lysine": 4,
-              "methionine": 1.3,
-              "phenylalanine": 1.9,
-              "threonine": 2,
-              "tryptophan": 0.52,
-              "histidine": 1.5
+              "leucine": 0.36,
+              "isoleucine": 0.18,
+              "valine": 0.24,
+              "lysine": 0.15,
+              "methionine": 0.09,
+              "phenylalanine": 0.21,
+              "threonine": 0.12,
+              "tryptophan": 0.03,
+              "histidine": 0.09
             },
-            "omega3": 0.1,
-            "omega6": 0.8,
-            "source": "Оценка ИИ"
+            "omega3": 0.05,
+            "omega6": 2.7,
+            "source": "Скурихин, табл. 10"
           }
         ]
       },
       "totals": {
-        "calories": 980,
-        "protein": 71.6,
-        "fat": 18.2,
-        "carbs": 127.2,
+        "calories": 1259,
+        "protein": 37.8,
+        "fat": 22.5,
+        "carbs": 221.2,
         "amino_acids": {
-          "leucine": 5.1,
-          "isoleucine": 2.86,
-          "valine": 3.48,
-          "lysine": 4.85,
-          "methionine": 1.68,
-          "phenylalanine": 2.91,
-          "threonine": 2.65,
-          "tryptophan": 0.76,
-          "histidine": 1.96
+          "leucine": 3,
+          "isoleucine": 1.71,
+          "valine": 2.01,
+          "lysine": 2.8,
+          "methionine": 0.82,
+          "phenylalanine": 1.66,
+          "threonine": 1.48,
+          "tryptophan": 0.41,
+          "histidine": 0.89
         },
         "omega3": 0.34,
-        "omega6": 5.78
+        "omega6": 4.47
       },
       "norms": {
         "calories": 2500,
@@ -948,26 +399,26 @@
         "omega6_max": 17
       },
       "deficits": [
-        "Критический дефицит калорий: получено 980 ккал из 2500 нормы (39%)",
-        "Дефицит белка: получено 71.6г из 80г нормы (90%)",
-        "Критический дефицит жиров: получено 18.2г из 70г нормы (26%)",
-        "Критический дефицит углеводов: получено 127.2г из 350г нормы (36%)",
-        "Критический дефицит Омега-3: получено 0.34г из минимума 1.1г (31%)"
+        "Критический дефицит калорий: получено 1259 ккал из 2500 необходимых (50% от нормы)",
+        "Критический дефицит белка: получено 37.8 г из 80 г необходимых (47% от нормы)",
+        "Дефицит жиров: получено 22.5 г из 70 г необходимых (32% от нормы)",
+        "Дефицит углеводов: получено 221 г из 350 г необходимых (63% от нормы)",
+        "Критический дефицит Омега-3: получено 0.34 г из 1.1 г необходимых (31% от нормы)"
       ],
       "imbalances": [
-        "Несбалансированное распределение калорий: 75% калорий в завтрак, только 23% в ужин",
-        "Низкое содержание полезных жиров",
-        "Отсутствие овощей и фруктов в рационе"
+        "Чрезмерное потребление простых углеводов из конфет (135 г за ужин при норме быстрых углеводов 50 г/день)",
+        "Несбалансированное распределение калорий: 60% от общих калорий приходится на ужин из конфет",
+        "Низкое качество белка: основной источник - растительные белки с неполным аминокислотным составом"
       ],
       "recommendations": [
-        "Увеличить общую калорийность рациона минимум в 2.5 раза",
-        "Добавить источники полезных жиров: орехи, семена, рыба, авокадо",
-        "Включить больше овощей и фруктов для витаминов и клетчатки",
-        "Добавить полноценный перекус между основными приемами пищи",
-        "Увеличить порцию ужина для лучшего распределения белка в течение дня",
-        "Добавить источники Омега-3: жирная рыба, льняное масло, грецкие орехи"
+        "Срочно увеличить калорийность рациона на 1240 ккал, добавив полноценные приемы пищи",
+        "Заменить конфеты на ужин полноценным белковым блюдом (мясо, рыба, творог) с гарниром",
+        "Добавить источники полезных жиров: орехи, растительные масла, авокадо для восполнения дефицита Омега-3",
+        "Увеличить порции основных блюд: рис до 200-250г, добавить второе блюдо на завтрак",
+        "Включить в рацион молочные продукты для улучшения качества белка и кальция",
+        "Добавить овощные салаты с растительным маслом для витаминов и полезных жиров"
       ],
-      "createdAt": "2026-04-08T06:06:19.789Z"
+      "createdAt": "2026-04-08T06:07:11.466Z"
     }
   ]
 }
