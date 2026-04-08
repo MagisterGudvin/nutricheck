@@ -798,6 +798,25 @@ tbody tr:hover {
   font-size: 1rem;
 }
 
+/* ===== Week diary ===== */
+.week-diary-days {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.week-day-card {
+  border-left: 4px solid var(--gray-light);
+}
+
+.week-day-today {
+  border-left-color: var(--green);
+}
+
+.week-day-card textarea {
+  min-height: 50px;
+}
+
 /* ===== Analyze button ===== */
 .btn-analyze {
   padding: 0.8rem 2.5rem;

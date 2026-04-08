@@ -136,7 +136,8 @@ const UI = (() => {
 
     if (Auth.isStudent()) {
       nav.innerHTML = `
-        <a href="#diary" data-page="diary"><span class="nav-icon">&#9997;</span> Ввод рациона</a>
+        <a href="#diary" data-page="diary"><span class="nav-icon">&#9997;</span> Ввод за день</a>
+        <a href="#week-diary" data-page="week-diary"><span class="nav-icon">&#128221;</span> Ввод за неделю</a>
         <a href="#report" data-page="report"><span class="nav-icon">&#128202;</span> Последний отчёт</a>
         <a href="#week" data-page="week"><span class="nav-icon">&#128197;</span> Сводка по дням</a>
       `;
@@ -169,7 +170,9 @@ const UI = (() => {
 
     switch (page) {
       case 'diary': renderDiary(content); break;
+      case 'week-diary': renderWeekDiary(content); break;
       case 'report': renderReport(content, params); break;
+      case 'week-report': renderWeekReport(content, params); break;
       case 'week': renderWeek(content); break;
       case 'students': renderStudents(content); break;
       case 'student-detail': renderStudentDetail(content, params); break;
@@ -260,6 +263,316 @@ const UI = (() => {
         console.error(e);
       }
     };
+  }
+
+  // ===== Week Diary (input for 7 days) =====
+
+  function renderWeekDiary(container) {
+    const DAY_NAMES = ['Понедельник', 'Вторник', 'Среда', 'Четверг', 'Пятница', 'Суббота', 'Воскресенье'];
+
+    // Рассчитаем даты текущей недели (пн-вс)
+    const today = new Date();
+    const dayOfWeek = today.getDay(); // 0=вс, 1=пн...
+    const mondayOffset = dayOfWeek === 0 ? -6 : 1 - dayOfWeek;
+    const monday = new Date(today);
+    monday.setDate(today.getDate() + mondayOffset);
+
+    const weekDates = [];
+    for (let i = 0; i < 7; i++) {
+      const d = new Date(monday);
+      d.setDate(monday.getDate() + i);
+      weekDates.push(d.toISOString().slice(0, 10));
+    }
+
+    const weekLabel = `${weekDates[0]} — ${weekDates[6]}`;
+
+    container.innerHTML = `
+      <div class="page-header">
+        <h2>Ввод рациона за неделю</h2>
+        <p>${weekLabel}</p>
+      </div>
+
+      <div class="week-diary-days">
+        ${weekDates.map((date, i) => {
+          const isToday = date === today.toISOString().slice(0, 10);
+          return `
+            <div class="card week-day-card ${isToday ? 'week-day-today' : ''}" data-date="${date}">
+              <h3 class="card-title">${DAY_NAMES[i]}, ${date} ${isToday ? '<span class="badge badge-ok">Сегодня</span>' : ''}</h3>
+              <div class="meal-cards" style="grid-template-columns:1fr;">
+                <div class="form-group" style="margin-bottom:0.5rem;">
+                  <label>Завтрак</label>
+                  <textarea id="wd-b-${i}" placeholder="Что ели на завтрак?" rows="2"></textarea>
+                </div>
+                <div class="form-group" style="margin-bottom:0.5rem;">
+                  <label>Обед</label>
+                  <textarea id="wd-l-${i}" placeholder="Что ели на обед?" rows="2"></textarea>
+                </div>
+                <div class="form-group" style="margin-bottom:0;">
+                  <label>Ужин</label>
+                  <textarea id="wd-d-${i}" placeholder="Что ели на ужин?" rows="2"></textarea>
+                </div>
+              </div>
+            </div>
+          `;
+        }).join('')}
+      </div>
+
+      <div style="margin-top:1.5rem; text-align:center;">
+        <button class="btn btn-primary btn-analyze" id="btn-analyze-week">
+          &#128269; Анализировать неделю
+        </button>
+      </div>
+    `;
+
+    $('#btn-analyze-week').onclick = async () => {
+      // Собираем данные по дням (только заполненные)
+      const days = [];
+      for (let i = 0; i < 7; i++) {
+        const b = $(`#wd-b-${i}`).value.trim();
+        const l = $(`#wd-l-${i}`).value.trim();
+        const d = $(`#wd-d-${i}`).value.trim();
+        if (b || l || d) {
+          days.push({ date: weekDates[i], breakfast: b, lunch: l, dinner: d });
+        }
+      }
+
+      if (days.length === 0) {
+        toast('Заполните хотя бы один день', 'error');
+        return;
+      }
+
+      try {
+        const session = Auth.getSession();
+        const results = await API.analyzeWeek(days, (current, total, date) => {
+          showLoading(`Анализ дня ${current} из ${total} (${date})...`);
+        });
+
+        showLoading('Сохраняем отчёты...');
+        for (const { date, result } of results) {
+          const day = days.find(d => d.date === date);
+          const report = {
+            date,
+            input: { breakfast: day.breakfast, lunch: day.lunch, dinner: day.dinner },
+            meals: result.meals,
+            totals: result.totals,
+            norms: result.norms,
+            deficits: result.deficits || [],
+            imbalances: result.imbalances || [],
+            recommendations: result.recommendations || [],
+            createdAt: new Date().toISOString()
+          };
+          await Database.saveReport(session.id, report);
+        }
+
+        hideLoading();
+        toast(`Анализ завершён! Обработано дней: ${results.length}`);
+        location.hash = '#week-report/' + weekDates[0];
+      } catch (e) {
+        hideLoading();
+        toast('Ошибка: ' + e.message, 'error');
+        console.error(e);
+      }
+    };
+  }
+
+  // ===== Week Report (combined for multiple days) =====
+
+  function renderWeekReport(container, params) {
+    const session = Auth.getSession();
+    const studentId = params?.studentId || session.id;
+    const allReports = Database.getReports(studentId);
+    const norms = Database.getNorms();
+
+    // Если указана стартовая дата — берём 7 дней от неё, иначе последние 7
+    let weekReports;
+    if (params?.weekStart) {
+      const start = params.weekStart;
+      const endDate = new Date(start);
+      endDate.setDate(endDate.getDate() + 6);
+      const end = endDate.toISOString().slice(0, 10);
+      weekReports = allReports.filter(r => r.date >= start && r.date <= end);
+      weekReports.sort((a, b) => a.date.localeCompare(b.date));
+    } else {
+      weekReports = allReports.slice(0, 7);
+    }
+
+    if (weekReports.length === 0) {
+      container.innerHTML = `
+        <div class="page-header"><h2>Недельный отчёт</h2></div>
+        <div class="empty-state">
+          <div class="empty-icon">&#128196;</div>
+          <p>Нет отчётов за эту неделю.</p>
+        </div>
+      `;
+      return;
+    }
+
+    // Суммы и средние за неделю
+    const totals = { calories: 0, protein: 0, fat: 0, carbs: 0, omega3: 0, omega6: 0 };
+    const aminoTotals = {};
+    for (const rep of weekReports) {
+      if (!rep.totals) continue;
+      totals.calories += rep.totals.calories || 0;
+      totals.protein += rep.totals.protein || 0;
+      totals.fat += rep.totals.fat || 0;
+      totals.carbs += rep.totals.carbs || 0;
+      totals.omega3 += rep.totals.omega3 || 0;
+      totals.omega6 += rep.totals.omega6 || 0;
+      if (rep.totals.amino_acids) {
+        for (const [k, v] of Object.entries(rep.totals.amino_acids)) {
+          aminoTotals[k] = (aminoTotals[k] || 0) + (v || 0);
+        }
+      }
+    }
+    const days = weekReports.length;
+    const avg = {
+      calories: Math.round(totals.calories / days),
+      protein: Math.round(totals.protein / days * 10) / 10,
+      fat: Math.round(totals.fat / days * 10) / 10,
+      carbs: Math.round(totals.carbs / days * 10) / 10,
+    };
+
+    // Собираем все дефициты и рекомендации
+    const allDeficits = new Set();
+    const allImbalances = new Set();
+    const allRecommendations = new Set();
+    for (const rep of weekReports) {
+      (rep.deficits || []).forEach(d => allDeficits.add(d));
+      (rep.imbalances || []).forEach(d => allImbalances.add(d));
+      (rep.recommendations || []).forEach(d => allRecommendations.add(d));
+    }
+
+    const dateRange = `${weekReports[0].date} — ${weekReports[weekReports.length - 1].date}`;
+    const student = Auth.getStudentById(studentId);
+    const studentName = student ? student.name : session.name;
+
+    container.innerHTML = `
+      <div class="page-header">
+        <h2>Недельный отчёт</h2>
+        <p>${studentName} &middot; ${dateRange} &middot; ${days} дн.</p>
+      </div>
+
+      <div class="week-summary">
+        <div class="week-stat"><div class="stat-value">${avg.calories}</div><div class="stat-label">Ср. калории/день</div></div>
+        <div class="week-stat"><div class="stat-value">${avg.protein}</div><div class="stat-label">Ср. белки (г)</div></div>
+        <div class="week-stat"><div class="stat-value">${avg.fat}</div><div class="stat-label">Ср. жиры (г)</div></div>
+        <div class="week-stat"><div class="stat-value">${avg.carbs}</div><div class="stat-label">Ср. углеводы (г)</div></div>
+        <div class="week-stat"><div class="stat-value">${days}</div><div class="stat-label">Дней</div></div>
+      </div>
+
+      <!-- Таблица по дням -->
+      <div class="report-section">
+        <h3>Итоги по дням</h3>
+        <div class="table-wrap">
+          <table>
+            <thead><tr>
+              <th>Дата</th><th>Ккал</th><th>Белки</th><th>Жиры</th><th>Углеводы</th>
+              <th>Омега-3</th><th>Омега-6</th><th>Статус</th>
+            </tr></thead>
+            <tbody>
+              ${weekReports.map(rep => {
+                const t = rep.totals || {};
+                const st = Analysis.getOverallStatus(rep);
+                return `<tr class="day-report-row" data-date="${rep.date}" style="cursor:pointer">
+                  <td><strong>${rep.date}</strong></td>
+                  <td>${r(t.calories)}</td>
+                  <td>${r(t.protein)}</td>
+                  <td>${r(t.fat)}</td>
+                  <td>${r(t.carbs)}</td>
+                  <td>${r(t.omega3)}</td>
+                  <td>${r(t.omega6)}</td>
+                  <td><span class="badge badge-${st}">${statusLabel(st)}</span></td>
+                </tr>`;
+              }).join('')}
+              <tr class="row-total">
+                <td>Сумма</td>
+                <td>${r(totals.calories)}</td>
+                <td>${r(totals.protein)}</td>
+                <td>${r(totals.fat)}</td>
+                <td>${r(totals.carbs)}</td>
+                <td>${r(totals.omega3)}</td>
+                <td>${r(totals.omega6)}</td>
+                <td></td>
+              </tr>
+              <tr class="row-norm">
+                <td>Среднее/день</td>
+                <td>${avg.calories}</td>
+                <td>${avg.protein}</td>
+                <td>${avg.fat}</td>
+                <td>${avg.carbs}</td>
+                <td>${r(totals.omega3 / days)}</td>
+                <td>${r(totals.omega6 / days)}</td>
+                <td></td>
+              </tr>
+              <tr>
+                <td>Норма/день</td>
+                <td>${norms.calories}</td>
+                <td>${norms.protein}</td>
+                <td>${norms.fat}</td>
+                <td>${norms.carbs}</td>
+                <td>&ge;${norms.omega3_min || 1.1}</td>
+                <td>&le;${norms.omega6_max || 17}</td>
+                <td></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Аминокислоты (среднее за неделю vs норма) -->
+      ${Object.keys(aminoTotals).length > 0 ? `
+        <div class="report-section">
+          <h3>Аминокислоты — среднее за день</h3>
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th>Аминокислота</th><th>Ср. факт (г)</th><th>Норма (г)</th><th>Разница</th></tr></thead>
+              <tbody>
+                ${Object.entries(Analysis.AMINO_NAMES).map(([key, label]) => {
+                  const avgVal = Math.round((aminoTotals[key] || 0) / days * 100) / 100;
+                  const norm = norms.amino_acids?.[key] || 0;
+                  const diff = avgVal - norm;
+                  return `<tr>
+                    <td>${label}</td>
+                    <td>${avgVal}</td>
+                    <td>${norm}</td>
+                    <td class="${statusClass(avgVal, norm)}">${diffStr(diff)}</td>
+                  </tr>`;
+                }).join('')}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      ` : ''}
+
+      <!-- Дефициты за неделю -->
+      ${allDeficits.size > 0 ? `
+        <div class="report-section">
+          <h3>Дефициты (за неделю)</h3>
+          <ul class="deficit-list">${[...allDeficits].map(d => `<li>${escHtml(d)}</li>`).join('')}</ul>
+        </div>
+      ` : ''}
+
+      ${allImbalances.size > 0 ? `
+        <div class="report-section">
+          <h3>Дисбалансы (за неделю)</h3>
+          <ul class="deficit-list imbalance-list">${[...allImbalances].map(d => `<li>${escHtml(d)}</li>`).join('')}</ul>
+        </div>
+      ` : ''}
+
+      ${allRecommendations.size > 0 ? `
+        <div class="report-section">
+          <h3>Рекомендации</h3>
+          <ul class="recommendation-list">${[...allRecommendations].map(d => `<li>${escHtml(d)}</li>`).join('')}</ul>
+        </div>
+      ` : ''}
+    `;
+
+    // Клик по строке — открываем отчёт за конкретный день
+    $$('.day-report-row', container).forEach(row => {
+      row.onclick = () => {
+        location.hash = '#report/' + row.dataset.date;
+      };
+    });
   }
 
   // ===== Report =====

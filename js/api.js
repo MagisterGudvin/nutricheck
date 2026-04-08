@@ -148,5 +148,21 @@ ${JSON.stringify(norms, null, 2)}
     }
   }
 
-  return { analyze, setProxyUrl, getProxyUrl };
+  /**
+   * Анализ рациона за неделю (7 дней).
+   * days = [{ date, breakfast, lunch, dinner }, ...]
+   * Анализируем каждый день отдельным запросом.
+   */
+  async function analyzeWeek(days, onProgress) {
+    const results = [];
+    for (let i = 0; i < days.length; i++) {
+      const day = days[i];
+      if (onProgress) onProgress(i + 1, days.length, day.date);
+      const result = await analyze(day.breakfast, day.lunch, day.dinner);
+      results.push({ date: day.date, result });
+    }
+    return results;
+  }
+
+  return { analyze, analyzeWeek, setProxyUrl, getProxyUrl };
 })();

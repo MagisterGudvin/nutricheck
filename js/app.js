@@ -43,8 +43,14 @@ const App = (() => {
         case 'diary':
           UI.renderPage('diary');
           break;
+        case 'week-diary':
+          UI.renderPage('week-diary');
+          break;
         case 'report':
           UI.renderPage('report', { date: parts[1] || null });
+          break;
+        case 'week-report':
+          UI.renderPage('week-report', { weekStart: parts[1] || null });
           break;
         case 'week':
           UI.renderPage('week');
@@ -66,6 +72,9 @@ const App = (() => {
         case 'report':
           // teacher viewing student report: #report/studentId/date
           UI.renderPage('report', { studentId: parts[1], date: parts[2] });
+          break;
+        case 'week-report':
+          UI.renderPage('week-report', { studentId: parts[1], weekStart: parts[2] });
           break;
         case 'products':
           UI.renderPage('products');
