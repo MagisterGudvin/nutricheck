@@ -1,1 +1,10 @@
-[]
+[
+  {
+    "id": "mnq4w9is6h48",
+    "name": "Миша",
+    "login": "Mike123",
+    "password": "Mike123",
+    "role": "student",
+    "created": "2026-04-08T14:19:08.212Z"
+  }
+]
