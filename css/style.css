@@ -239,6 +239,7 @@ textarea {
 .btn {
   display: inline-flex;
   align-items: center;
+  justify-content: center;
   gap: 0.5rem;
   padding: 0.6rem 1.2rem;
   font-size: 0.9rem;

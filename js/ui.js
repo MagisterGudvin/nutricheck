@@ -45,7 +45,7 @@ const UI = (() => {
         tab.classList.add('active');
         if (tab.dataset.tab === 'login') { show(loginForm); hide(regForm); }
         else { hide(loginForm); show(regForm); }
-        hide($('.auth-error'));
+        hideAuthError();
       };
     });
 
@@ -53,9 +53,13 @@ const UI = (() => {
     $('#btn-login').onclick = () => {
       const login = $('#login-username').value.trim();
       const password = $('#login-password').value.trim();
+      if (!login || !password) {
+        showAuthError('Введите логин и пароль');
+        return;
+      }
       const result = Auth.login(login, password);
       if (result.ok) {
-        hide($('.auth-error'));
+        hideAuthError();
         App.onLogin();
       } else {
         showAuthError(result.error);
@@ -72,7 +76,7 @@ const UI = (() => {
         const result = await Auth.register(name, login, password);
         hideLoading();
         if (result.ok) {
-          hide($('.auth-error'));
+          hideAuthError();
           App.onLogin();
         } else {
           showAuthError(result.error);
@@ -87,7 +91,12 @@ const UI = (() => {
   function showAuthError(msg) {
     const el = $('.auth-error');
     el.textContent = msg;
-    show(el);
+    el.style.display = 'block';
+  }
+
+  function hideAuthError() {
+    const el = $('.auth-error');
+    el.style.display = 'none';
   }
 
   // ===== App layout =====
