@@ -1,6 +1,144 @@
 {
   "mnorzw8ude6k": [
     {
+      "date": "2026-04-11",
+      "input": {
+        "breakfast": "овсянка 200г",
+        "lunch": "Борщ 200 мл",
+        "dinner": "куриная грудка 200г"
+      },
+      "meals": {
+        "breakfast": [
+          {
+            "product": "Овсянка",
+            "portion_g": 200,
+            "calories": 732,
+            "protein": 24.4,
+            "fat": 12.4,
+            "carbs": 118.4,
+            "amino_acids": {
+              "leucine": 1.6,
+              "isoleucine": 0.8,
+              "valine": 1.2,
+              "lysine": 0.8,
+              "methionine": 0.4,
+              "phenylalanine": 1,
+              "threonine": 0.7,
+              "tryptophan": 0.24,
+              "histidine": 0.5
+            },
+            "omega3": 0.2,
+            "omega6": 4.8,
+            "source": "оценка ИИ"
+          }
+        ],
+        "lunch": [
+          {
+            "product": "Борщ",
+            "portion_g": 200,
+            "calories": 60,
+            "protein": 1.6,
+            "fat": 2,
+            "carbs": 8.2,
+            "amino_acids": {
+              "leucine": 0.12,
+              "isoleucine": 0.06,
+              "valine": 0.08,
+              "lysine": 0.08,
+              "methionine": 0.02,
+              "phenylalanine": 0.06,
+              "threonine": 0.05,
+              "tryptophan": 0.01,
+              "histidine": 0.03
+            },
+            "omega3": 0.02,
+            "omega6": 0.2,
+            "source": "Скурихин, табл. 8.1.5.19"
+          }
+        ],
+        "dinner": [
+          {
+            "product": "Куриная грудка",
+            "portion_g": 200,
+            "calories": 462,
+            "protein": 46.2,
+            "fat": 3.8,
+            "carbs": 0,
+            "amino_acids": {
+              "leucine": 3.7,
+              "isoleucine": 2.1,
+              "valine": 2.3,
+              "lysine": 4.2,
+              "methionine": 1.4,
+              "phenylalanine": 1.8,
+              "threonine": 2,
+              "tryptophan": 0.54,
+              "histidine": 1.5
+            },
+            "omega3": 0.15,
+            "omega6": 0.8,
+            "source": "оценка ИИ"
+          }
+        ]
+      },
+      "totals": {
+        "calories": 1254,
+        "protein": 72.2,
+        "fat": 18.2,
+        "carbs": 126.6,
+        "amino_acids": {
+          "leucine": 5.42,
+          "isoleucine": 2.96,
+          "valine": 3.58,
+          "lysine": 5.08,
+          "methionine": 1.82,
+          "phenylalanine": 2.86,
+          "threonine": 2.75,
+          "tryptophan": 0.79,
+          "histidine": 2.03
+        },
+        "omega3": 0.37,
+        "omega6": 5.8
+      },
+      "norms": {
+        "calories": 2500,
+        "protein": 80,
+        "fat": 70,
+        "carbs": 350,
+        "amino_acids": {
+          "leucine": 2.7,
+          "isoleucine": 1.4,
+          "valine": 1.8,
+          "lysine": 2.1,
+          "methionine": 0.7,
+          "phenylalanine": 1.6,
+          "threonine": 1,
+          "tryptophan": 0.28,
+          "histidine": 0.7
+        },
+        "omega3_min": 1.1,
+        "omega6_max": 17
+      },
+      "deficits": [
+        "Критический дефицит калорий: потребление составляет только 50% от нормы (1254 из 2500 ккал)",
+        "Недостаток жиров: потребление составляет только 26% от нормы (18.2 из 70 г)",
+        "Недостаток углеводов: потребление составляет только 36% от нормы (126.6 из 350 г)",
+        "Дефицит Омега-3 жирных кислот: потребление составляет только 34% от минимальной нормы (0.37 из 1.1 г)"
+      ],
+      "imbalances": [
+        "Крайне низкое общее потребление энергии может привести к замедлению метаболизма",
+        "Слишком низкое потребление жиров может нарушить усвоение жирорастворимых витаминов"
+      ],
+      "recommendations": [
+        "Увеличить калорийность рациона минимум в 2 раза - добавить орехи, масла, авокадо",
+        "Добавить источники полезных жиров: рыбу жирных сортов, льняное масло, грецкие орехи",
+        "Включить больше сложных углеводов: крупы, цельнозерновой хлеб, овощи",
+        "Добавить перекусы между основными приемами пищи",
+        "Рассмотреть добавление Омега-3 из рыбьего жира или льняного масла"
+      ],
+      "createdAt": "2026-04-08T06:06:25.283Z"
+    },
+    {
       "date": "2026-04-10",
       "input": {
         "breakfast": "овсянка 200г",
