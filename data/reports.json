@@ -1,6 +1,144 @@
 {
   "mnorzw8ude6k": [
     {
+      "date": "2026-04-12",
+      "input": {
+        "breakfast": "овсянка 200г",
+        "lunch": "Борщ 200 мл",
+        "dinner": "куриная грудка 200г"
+      },
+      "meals": {
+        "breakfast": [
+          {
+            "product": "овсянка",
+            "portion_g": 200,
+            "calories": 732,
+            "protein": 24.8,
+            "fat": 12.6,
+            "carbs": 122.6,
+            "amino_acids": {
+              "leucine": 1.8,
+              "isoleucine": 0.9,
+              "valine": 1.2,
+              "lysine": 0.8,
+              "methionine": 0.4,
+              "phenylalanine": 1,
+              "threonine": 0.8,
+              "tryptophan": 0.3,
+              "histidine": 0.5
+            },
+            "omega3": 0.2,
+            "omega6": 4.8,
+            "source": "Оценка ИИ"
+          }
+        ],
+        "lunch": [
+          {
+            "product": "борщ",
+            "portion_g": 200,
+            "calories": 30,
+            "protein": 1.6,
+            "fat": 2,
+            "carbs": 8.2,
+            "amino_acids": {
+              "leucine": 0.12,
+              "isoleucine": 0.06,
+              "valine": 0.08,
+              "lysine": 0.08,
+              "methionine": 0.02,
+              "phenylalanine": 0.06,
+              "threonine": 0.06,
+              "tryptophan": 0.02,
+              "histidine": 0.04
+            },
+            "omega3": 0.02,
+            "omega6": 0.18,
+            "source": "Скурихин, табл. 8.1.5.19"
+          }
+        ],
+        "dinner": [
+          {
+            "product": "куриная грудка",
+            "portion_g": 200,
+            "calories": 462,
+            "protein": 62,
+            "fat": 3.6,
+            "carbs": 0,
+            "amino_acids": {
+              "leucine": 5.4,
+              "isoleucine": 2.8,
+              "valine": 3.2,
+              "lysine": 5.8,
+              "methionine": 1.8,
+              "phenylalanine": 2.6,
+              "threonine": 2.8,
+              "tryptophan": 0.8,
+              "histidine": 2.2
+            },
+            "omega3": 0.1,
+            "omega6": 0.8,
+            "source": "Оценка ИИ"
+          }
+        ]
+      },
+      "totals": {
+        "calories": 1224,
+        "protein": 88.4,
+        "fat": 18.2,
+        "carbs": 130.8,
+        "amino_acids": {
+          "leucine": 7.32,
+          "isoleucine": 3.76,
+          "valine": 4.48,
+          "lysine": 6.68,
+          "methionine": 2.22,
+          "phenylalanine": 3.66,
+          "threonine": 3.66,
+          "tryptophan": 1.12,
+          "histidine": 2.74
+        },
+        "omega3": 0.32,
+        "omega6": 5.78
+      },
+      "norms": {
+        "calories": 2500,
+        "protein": 80,
+        "fat": 70,
+        "carbs": 350,
+        "amino_acids": {
+          "leucine": 2.7,
+          "isoleucine": 1.4,
+          "valine": 1.8,
+          "lysine": 2.1,
+          "methionine": 0.7,
+          "phenylalanine": 1.6,
+          "threonine": 1,
+          "tryptophan": 0.28,
+          "histidine": 0.7
+        },
+        "omega3_min": 1.1,
+        "omega6_max": 17
+      },
+      "deficits": [
+        "Критический дефицит калорий: 1276 ккал (51% от нормы)",
+        "Дефицит жиров: 51.8г (26% от нормы)",
+        "Дефицит углеводов: 219.2г (37% от нормы)",
+        "Дефицит Омега-3: 0.78г (29% от минимальной нормы)"
+      ],
+      "imbalances": [
+        "Избыток белка: +8.4г (111% от нормы)",
+        "Крайне низкое содержание жиров может нарушить усвоение жирорастворимых витаминов"
+      ],
+      "recommendations": [
+        "Увеличить калорийность рациона минимум в 2 раза",
+        "Добавить источники полезных жиров: орехи, семена, растительные масла, рыба",
+        "Включить больше сложных углеводов: цельнозерновые, овощи, фрукты",
+        "Добавить источники Омега-3: жирную рыбу, льняное масло, грецкие орехи",
+        "Разнообразить рацион овощами и фруктами для получения витаминов и минералов"
+      ],
+      "createdAt": "2026-04-08T06:06:26.480Z"
+    },
+    {
       "date": "2026-04-11",
       "input": {
         "breakfast": "овсянка 200г",
