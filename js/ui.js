@@ -129,7 +129,7 @@ const UI = (() => {
       nav.innerHTML = `
         <a href="#diary" data-page="diary"><span class="nav-icon">&#9997;</span> Ввод рациона</a>
         <a href="#report" data-page="report"><span class="nav-icon">&#128202;</span> Последний отчёт</a>
-        <a href="#week" data-page="week"><span class="nav-icon">&#128197;</span> Сводка за неделю</a>
+        <a href="#week" data-page="week"><span class="nav-icon">&#128197;</span> Сводка по дням</a>
       `;
     } else if (Auth.isTeacher()) {
       nav.innerHTML = `
@@ -578,35 +578,44 @@ const UI = (() => {
   function renderWeek(container) {
     const session = Auth.getSession();
     const reports = Database.getReports(session.id);
-    const last7 = reports.slice(0, 7);
-    const norms = Database.getNorms();
+    const allDays = reports; // все дни, не только 7
 
-    const avg = Analysis.getAverages(last7);
+    // Суммы по всем дням
+    const sums = { calories: 0, protein: 0, fat: 0, carbs: 0, days: 0 };
+    for (const rep of allDays) {
+      if (rep.totals) {
+        sums.calories += rep.totals.calories || 0;
+        sums.protein += rep.totals.protein || 0;
+        sums.fat += rep.totals.fat || 0;
+        sums.carbs += rep.totals.carbs || 0;
+        sums.days++;
+      }
+    }
 
     container.innerHTML = `
       <div class="page-header">
-        <h2>Сводка за неделю</h2>
-        <p>Последние 7 дней</p>
+        <h2>Сводка по дням</h2>
+        <p>Все отчёты с итогами</p>
       </div>
 
-      ${avg ? `
+      ${sums.days > 0 ? `
         <div class="week-summary">
-          <div class="week-stat"><div class="stat-value">${avg.calories}</div><div class="stat-label">Ср. калории</div></div>
-          <div class="week-stat"><div class="stat-value">${avg.protein}</div><div class="stat-label">Ср. белки (г)</div></div>
-          <div class="week-stat"><div class="stat-value">${avg.fat}</div><div class="stat-label">Ср. жиры (г)</div></div>
-          <div class="week-stat"><div class="stat-value">${avg.carbs}</div><div class="stat-label">Ср. углеводы (г)</div></div>
-          <div class="week-stat"><div class="stat-value">${avg.days}</div><div class="stat-label">Дней</div></div>
+          <div class="week-stat"><div class="stat-value">${Math.round(sums.calories)}</div><div class="stat-label">Всего калорий</div></div>
+          <div class="week-stat"><div class="stat-value">${Math.round(sums.protein * 10) / 10}</div><div class="stat-label">Всего белков (г)</div></div>
+          <div class="week-stat"><div class="stat-value">${Math.round(sums.fat * 10) / 10}</div><div class="stat-label">Всего жиров (г)</div></div>
+          <div class="week-stat"><div class="stat-value">${Math.round(sums.carbs * 10) / 10}</div><div class="stat-label">Всего углеводов (г)</div></div>
+          <div class="week-stat"><div class="stat-value">${sums.days}</div><div class="stat-label">Дней</div></div>
         </div>
       ` : ''}
 
-      ${last7.length === 0 ? `
+      ${allDays.length === 0 ? `
         <div class="empty-state">
           <div class="empty-icon">&#128197;</div>
-          <p>Нет данных за последние дни. Начните вводить рацион!</p>
+          <p>Нет данных. Начните вводить рацион!</p>
         </div>
       ` : `
         <div class="day-cards" id="day-cards">
-          ${last7.map(report => {
+          ${allDays.map(report => {
             const status = Analysis.getOverallStatus(report);
             const t = report.totals || {};
             const comment = Database.getComment(session.id, report.date);
@@ -653,7 +662,8 @@ const UI = (() => {
           <p>Пока нет зарегистрированных студентов</p>
         </div>
       ` : `
-        <div class="card">
+        <!-- Desktop table -->
+        <div class="card students-table-desktop">
           <div class="table-wrap">
             <table>
               <thead><tr><th>Имя</th><th>Логин</th><th>Последний отчёт</th><th>Статус</th><th>Действия</th></tr></thead>
@@ -677,6 +687,32 @@ const UI = (() => {
               </tbody>
             </table>
           </div>
+        </div>
+
+        <!-- Mobile cards -->
+        <div class="students-cards-mobile">
+          ${students.map(s => {
+            const reports = allReports[s.id] || [];
+            const last = reports[0];
+            const status = last ? Analysis.getOverallStatus(last) : 'unknown';
+            return `<div class="student-card" data-id="${s.id}">
+              <div class="student-card-header">
+                <strong>${escHtml(s.name)}</strong>
+                ${last ? `<span class="badge badge-${status}">${statusLabel(status)}</span>` : ''}
+              </div>
+              <div class="student-card-info">
+                <span class="student-card-label">Логин:</span> ${escHtml(s.login)}
+              </div>
+              <div class="student-card-info">
+                <span class="student-card-label">Последний отчёт:</span> ${last ? last.date : '—'}
+              </div>
+              <div class="student-card-actions">
+                <button class="btn btn-sm btn-outline btn-view-student" data-id="${s.id}">Открыть</button>
+                <button class="btn btn-sm btn-outline btn-csv-student" data-id="${s.id}" data-name="${escHtml(s.name)}">CSV</button>
+                <button class="btn btn-sm btn-danger btn-del-student" data-id="${s.id}" data-name="${escHtml(s.name)}">&times;</button>
+              </div>
+            </div>`;
+          }).join('')}
         </div>
       `}
     `;
@@ -711,6 +747,13 @@ const UI = (() => {
 
     $$('.student-row', container).forEach(row => {
       row.onclick = () => { location.hash = '#student/' + row.dataset.id; };
+    });
+
+    $$('.student-card', container).forEach(card => {
+      card.onclick = (e) => {
+        if (e.target.closest('button')) return;
+        location.hash = '#student/' + card.dataset.id;
+      };
     });
   }
 

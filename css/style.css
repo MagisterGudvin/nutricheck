@@ -175,6 +175,7 @@ textarea {
   margin-left: var(--sidebar-width);
   padding: 2rem;
   min-height: 100vh;
+  overflow-x: hidden;
 }
 
 .page-header {
@@ -631,6 +632,50 @@ tbody tr:hover {
   background: var(--green-light);
 }
 
+/* ===== Student cards (mobile) ===== */
+.students-cards-mobile {
+  display: none;
+}
+
+.student-card {
+  background: var(--white);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: 1rem;
+  margin-bottom: 0.75rem;
+  cursor: pointer;
+  transition: box-shadow var(--transition);
+}
+
+.student-card:hover {
+  box-shadow: var(--shadow-lg);
+}
+
+.student-card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 0.5rem;
+  font-size: 1rem;
+}
+
+.student-card-info {
+  font-size: 0.85rem;
+  color: var(--gray);
+  margin-bottom: 0.25rem;
+}
+
+.student-card-label {
+  color: var(--dark);
+  font-weight: 500;
+}
+
+.student-card-actions {
+  display: flex;
+  gap: 0.5rem;
+  margin-top: 0.75rem;
+}
+
 /* ===== Product editor ===== */
 .product-actions {
   display: flex;
@@ -808,7 +853,11 @@ tbody tr:hover {
   .main-content {
     margin-left: 0;
     padding: 1rem;
-    padding-top: 4rem;
+    padding-top: 4.5rem;
+  }
+
+  .page-header {
+    padding-left: 3rem;
   }
 
   .page-header h2 {
@@ -838,15 +887,23 @@ tbody tr:hover {
     padding: 1rem;
   }
 
-  /* Tables: smaller font, better scroll */
+  /* Tables: horizontal scroll inside table-wrap, not whole page */
   .table-wrap {
     margin: 0 -1rem;
-    padding: 0 1rem;
+    padding: 0;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    max-width: calc(100vw - 2rem);
   }
 
-  table { font-size: 0.8rem; }
+  .table-wrap table {
+    font-size: 0.8rem;
+    min-width: 600px;
+    width: max-content;
+  }
 
-  th, td {
+  .table-wrap th,
+  .table-wrap td {
     padding: 0.4rem 0.5rem;
     white-space: nowrap;
   }
@@ -908,6 +965,15 @@ tbody tr:hover {
   /* Hint box */
   .hint-box {
     font-size: 0.82rem;
+  }
+
+  /* Students: hide table, show cards */
+  .students-table-desktop {
+    display: none;
+  }
+
+  .students-cards-mobile {
+    display: block;
   }
 
   /* Analyze button full width */
@@ -983,9 +1049,16 @@ tbody tr:hover {
     padding: 0.8rem;
   }
 
-  table { font-size: 0.75rem; }
+  .table-wrap {
+    max-width: calc(100vw - 1.5rem);
+  }
 
-  th, td {
+  .table-wrap table {
+    font-size: 0.75rem;
+  }
+
+  .table-wrap th,
+  .table-wrap td {
     padding: 0.3rem 0.4rem;
   }
 
