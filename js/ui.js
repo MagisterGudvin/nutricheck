@@ -941,7 +941,7 @@ const UI = (() => {
                     <td>${last ? `<span class="badge badge-${status}">${statusLabel(status)}</span>` : '—'}</td>
                     <td>
                       <button class="btn btn-sm btn-outline btn-view-student" data-id="${s.id}">Открыть</button>
-                      <button class="btn btn-sm btn-outline btn-csv-student" data-id="${s.id}" data-name="${escHtml(s.name)}">CSV</button>
+                      <button class="btn btn-sm btn-outline btn-doc-student" data-id="${s.id}">.doc</button>
                       <button class="btn btn-sm btn-danger btn-del-student" data-id="${s.id}" data-name="${escHtml(s.name)}">&times;</button>
                     </td>
                   </tr>`;
@@ -970,7 +970,7 @@ const UI = (() => {
               </div>
               <div class="student-card-actions">
                 <button class="btn btn-sm btn-outline btn-view-student" data-id="${s.id}">Открыть</button>
-                <button class="btn btn-sm btn-outline btn-csv-student" data-id="${s.id}" data-name="${escHtml(s.name)}">CSV</button>
+                <button class="btn btn-sm btn-outline btn-doc-student" data-id="${s.id}">.doc</button>
                 <button class="btn btn-sm btn-danger btn-del-student" data-id="${s.id}" data-name="${escHtml(s.name)}">&times;</button>
               </div>
             </div>`;
@@ -986,11 +986,11 @@ const UI = (() => {
       };
     });
 
-    $$('.btn-csv-student', container).forEach(btn => {
+    $$('.btn-doc-student', container).forEach(btn => {
       btn.onclick = (e) => {
         e.stopPropagation();
-        Reports.exportStudentCSV(btn.dataset.id, btn.dataset.name);
-        toast('CSV скачан');
+        DocxExport.exportWeekReport(btn.dataset.id);
+        toast('Отчёт скачан');
       };
     });
 
@@ -1039,8 +1039,8 @@ const UI = (() => {
 
       <div class="action-buttons" style="margin-bottom:1rem;">
         <button class="btn btn-secondary" onclick="location.hash='#students'">&#8592; К списку</button>
-        <button class="btn btn-outline btn-csv-one" data-id="${studentId}" data-name="${escHtml(student.name)}">CSV</button>
-        <button class="btn btn-outline btn-week-doc" data-id="${studentId}" data-name="${escHtml(student.name)}">Недельный отчёт (.doc)</button>
+        <button class="btn btn-outline btn-doc-one" data-id="${studentId}">Отчёт (.doc)</button>
+        <button class="btn btn-outline btn-week-doc" data-id="${studentId}">Недельный отчёт (.doc)</button>
       </div>
 
       ${reports.length === 0 ? `
@@ -1072,9 +1072,9 @@ const UI = (() => {
       `}
     `;
 
-    container.querySelector('.btn-csv-one')?.addEventListener('click', () => {
-      Reports.exportStudentCSV(studentId, student.name);
-      toast('CSV скачан');
+    container.querySelector('.btn-doc-one')?.addEventListener('click', () => {
+      DocxExport.exportWeekReport(studentId);
+      toast('Отчёт скачан');
     });
 
     container.querySelector('.btn-week-doc')?.addEventListener('click', () => {
@@ -1298,12 +1298,12 @@ const UI = (() => {
     container.innerHTML = `
       <div class="page-header">
         <h2>Экспорт отчётов</h2>
-        <p>Скачайте данные в формате CSV</p>
+        <p>Скачайте отчёты в формате DOCX</p>
       </div>
       <div class="card">
         <div style="display:flex; flex-direction:column; gap:1rem; max-width:400px;">
           <button class="btn btn-primary btn-block" id="btn-export-all">
-            &#128190; Скачать отчёт по всем студентам (CSV)
+            &#128190; Скачать отчёт по всем студентам (.doc)
           </button>
         </div>
         <div style="margin-top:2rem;">
@@ -1311,7 +1311,7 @@ const UI = (() => {
           ${Auth.getAllStudents().map(s => `
             <div class="export-student-row">
               <span>${escHtml(s.name)}</span>
-              <button class="btn btn-sm btn-outline btn-export-one" data-id="${s.id}" data-name="${escHtml(s.name)}">Скачать CSV</button>
+              <button class="btn btn-sm btn-outline btn-export-one" data-id="${s.id}">Скачать .doc</button>
             </div>
           `).join('') || '<p style="color:var(--gray)">Нет студентов</p>'}
         </div>
@@ -1319,14 +1319,14 @@ const UI = (() => {
     `;
 
     $('#btn-export-all').onclick = () => {
-      Reports.exportAllCSV();
-      toast('CSV всех студентов скачан');
+      DocxExport.exportAllStudents();
+      toast('Отчёт по всем студентам скачан');
     };
 
     $$('.btn-export-one', container).forEach(btn => {
       btn.onclick = () => {
-        Reports.exportStudentCSV(btn.dataset.id, btn.dataset.name);
-        toast('CSV скачан');
+        DocxExport.exportWeekReport(btn.dataset.id);
+        toast('Отчёт скачан');
       };
     });
   }
