@@ -1,8 +1,8 @@
 /**
- * Cloudflare Worker — прокси для Claude API + CRUD данных через GitHub API
+ * Cloudflare Worker — прокси для Timeweb Cloud AI-агент + CRUD данных через GitHub API
  *
  * Secrets (wrangler secret put):
- *   ANTHROPIC_API_KEY — ключ Claude API
+ *   TIMEWEB_TOKEN     — приватный токен Timeweb Cloud
  *   GITHUB_TOKEN      — Personal Access Token (repo scope)
  *
  * Vars (wrangler.toml [vars]):
@@ -10,9 +10,12 @@
  *   GITHUB_BRANCH     — ветка (по умолчанию "main")
  */
 
+const AGENT_ID = 'd43b70f8-5d42-476b-9de3-1ccdeac62b78';
+const AGENT_URL = `https://api.timeweb.cloud/api/v1/cloud-ai/agents/${AGENT_ID}/v1/chat/completions`;
+
 const CORS = {
   'Access-Control-Allow-Origin': '*',
-  'Access-Control-Allow-Methods': 'GET, POST, PUT, OPTIONS',
+  'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
   'Access-Control-Allow-Headers': 'Content-Type',
 };
 
@@ -33,14 +36,14 @@ export default {
     const path = url.pathname;
 
     try {
-      // --- Claude API proxy ---
+      // --- Timeweb AI proxy ---
       if (path === '/api/analyze' && request.method === 'POST') {
         return handleAnalyze(request, env);
       }
 
       // --- Data: read file ---
       if (path.startsWith('/data/') && request.method === 'GET') {
-        const file = 'data/' + path.slice(6); // e.g. "data/users.json"
+        const file = 'data/' + path.slice(6);
         return handleReadFile(file, env);
       }
 
@@ -80,28 +83,27 @@ export default {
   }
 };
 
-// ===== Claude API =====
+// ===== Timeweb Cloud AI =====
 
 async function handleAnalyze(request, env) {
   const body = await request.json();
 
-  const response = await fetch('https://api.anthropic.com/v1/messages', {
+  const response = await fetch(AGENT_URL, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
-      'x-api-key': env.ANTHROPIC_API_KEY,
-      'anthropic-version': '2023-06-01',
+      'Authorization': `Bearer ${env.TIMEWEB_TOKEN}`,
     },
     body: JSON.stringify({
-      model: 'claude-sonnet-4-20250514',
+      model: 'gemini',
+      messages: body.messages || [],
+      temperature: 0.3,
       max_tokens: 4096,
-      messages: body.messages,
-      system: body.system || '',
     }),
   });
 
   const data = await response.json();
-  return jsonResponse(data);
+  return jsonResponse(data, response.status);
 }
 
 // ===== GitHub API: read file =====
@@ -128,8 +130,6 @@ async function handleReadFile(filePath, env) {
   }
 
   const meta = await res.json();
-  // atob возвращает бинарную строку; для корректной декодировки UTF-8 (кириллица)
-  // нужно пропустить через Uint8Array → TextDecoder
   const binary = atob(meta.content.replace(/\n/g, ''));
   const bytes = new Uint8Array(binary.length);
   for (let i = 0; i < binary.length; i++) bytes[i] = binary.charCodeAt(i);
@@ -146,12 +146,9 @@ async function handleWriteFile(filePath, body, env) {
   const branch = env.GITHUB_BRANCH || 'main';
   const token = env.GITHUB_TOKEN;
 
-  // body.data — JSON данные для записи
-  // body.message — commit message (опционально)
   const content = btoa(unescape(encodeURIComponent(JSON.stringify(body.data, null, 2))));
   const commitMessage = body.message || `Update ${filePath}`;
 
-  // Получаем текущий SHA файла (нужен для обновления)
   const getUrl = `https://api.github.com/repos/${repo}/contents/${filePath}?ref=${branch}`;
   const getRes = await fetch(getUrl, {
     headers: {
@@ -167,7 +164,6 @@ async function handleWriteFile(filePath, body, env) {
     sha = meta.sha;
   }
 
-  // Записываем
   const putUrl = `https://api.github.com/repos/${repo}/contents/${filePath}`;
   const putBody = {
     message: commitMessage,
@@ -234,8 +230,6 @@ async function handleWriteTextFile(filePath, body, env) {
   const branch = env.GITHUB_BRANCH || 'main';
   const token = env.GITHUB_TOKEN;
 
-  // body.text — текстовое содержимое файла
-  // body.message — commit message
   const encoder = new TextEncoder();
   const encoded = encoder.encode(body.text);
   let binaryStr = '';
@@ -243,7 +237,6 @@ async function handleWriteTextFile(filePath, body, env) {
   const content = btoa(binaryStr);
   const commitMessage = body.message || `Update ${filePath}`;
 
-  // Получаем текущий SHA
   const getUrl = `https://api.github.com/repos/${repo}/contents/${filePath}?ref=${branch}`;
   const getRes = await fetch(getUrl, {
     headers: {
@@ -290,7 +283,6 @@ async function handleDeleteFile(filePath, env) {
   const branch = env.GITHUB_BRANCH || 'main';
   const token = env.GITHUB_TOKEN;
 
-  // Получаем SHA
   const getUrl = `https://api.github.com/repos/${repo}/contents/${filePath}?ref=${branch}`;
   const getRes = await fetch(getUrl, {
     headers: {

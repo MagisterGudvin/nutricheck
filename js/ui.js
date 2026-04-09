@@ -1523,12 +1523,13 @@ const UI = (() => {
       <div class="page-header">
         <h2>Настройки</h2>
       </div>
+
       <div class="card">
         <h3 class="card-title">Cloudflare Worker</h3>
         <div class="form-group">
           <label>URL прокси</label>
           <input type="url" id="settings-proxy" value="${escHtml(currentUrl)}" placeholder="https://nutricheck-proxy.xxx.workers.dev">
-          <div class="form-hint">Worker обрабатывает запросы к Claude API и синхронизирует данные с GitHub</div>
+          <div class="form-hint">Worker синхронизирует данные с GitHub и проксирует запросы к AI-агенту</div>
         </div>
         <button class="btn btn-primary" id="btn-save-settings">Сохранить</button>
         <button class="btn btn-outline" id="btn-test-connection" style="margin-left:0.5rem;">Проверить подключение</button>
@@ -1537,20 +1538,13 @@ const UI = (() => {
       <div class="card">
         <h3 class="card-title">Хранение данных</h3>
         <p style="font-size:0.9rem; color:var(--gray); margin-bottom:1rem;">
-          Данные (пользователи, отчёты, комментарии) хранятся в JSON-файлах репозитория GitHub.
-          Worker коммитит изменения через GitHub API. При каждом изменении данных запускается
-          workflow для валидации и создания бэкапа.
+          Данные (пользователи, отчёты) хранятся в JSON-файлах репозитория GitHub.
+          Worker коммитит изменения через GitHub API.
         </p>
         <div style="font-size:0.9rem;">
           Статус: ${connected
             ? '<span class="badge badge-ok">Данные загружены</span>'
             : '<span class="badge badge-danger">Нет подключения</span>'}
-        </div>
-        <div style="margin-top:0.5rem; font-size:0.85rem; color:var(--gray);">
-          Настройка Worker:<br>
-          <code>wrangler secret put ANTHROPIC_API_KEY</code> — ключ Claude API<br>
-          <code>wrangler secret put GITHUB_TOKEN</code> — GitHub PAT (scope: repo)<br>
-          <code>GITHUB_REPO</code> — owner/repo в wrangler.toml
         </div>
       </div>
     `;
